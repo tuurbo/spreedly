@@ -1,0 +1,24 @@
+{
+	"name": "tuurbo/spreedly",
+	"description": "Spreedly API",
+	"keywords": ["spreedly", "laravel", "credit card", "payment"],
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Daniel Fraser",
+			"email": "dlf1987+github@gmail.com"
+		}
+	],
+	"require": {
+		"php": ">=5.4.0",
+		"guzzlehttp/guzzle": "~4.0"
+	},
+	"require-dev": {
+		"phpspec/phpspec": "~2.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"Tuurbo\\Spreedly\\": "src/"
+		}
+	}
+}
