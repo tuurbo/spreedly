@@ -7,8 +7,10 @@ class Transaction {
 	public $transactionToken;
 
 	/**
-	 * Create Curl instance and set token.
+	 * Create a Guzzle instance and set token.
 	 *
+	 * @param  \GuzzleHttp\Client $client
+	 * @param  array $config
 	 * @param  string $transactionToken optional
 	 * @return void
 	 */
@@ -29,7 +31,7 @@ class Transaction {
 	 * </code>
 	 *
 	 * @param  string $transactionToken optional
-	 * @return mixed
+	 * @return \Tuurbo\Spreedly\Client
 	 */
 	public function all($transactionToken = null)
 	{
@@ -49,7 +51,7 @@ class Transaction {
 	 * </code>
 	 *
 	 * @param  string $transactionToken optional
-	 * @return mixed
+	 * @return \Tuurbo\Spreedly\Client
 	 */
 	public function referencing($offset = null, $count = null, $reverse = false)
 	{
@@ -112,7 +114,7 @@ class Transaction {
 	 *		Spreedly::transaction($transactionToken)->get();
 	 * </code>
 	 *
-	 * @return mixed
+	 * @return \Tuurbo\Spreedly\Client
 	 */
 	public function get()
 	{
@@ -129,7 +131,7 @@ class Transaction {
 	 *		Spreedly::transaction($transactionToken)->transcript();
 	 * </code>
 	 *
-	 * @return mixed
+	 * @return \Tuurbo\Spreedly\Client
 	 */
 	public function transcript()
 	{
@@ -140,7 +142,7 @@ class Transaction {
 	}
 
 	/**
-	 * Magic Method for referencing a transaction.
+	 * Handle dynamic calls for referencing a transaction.
 	 *
 	 * Can be used to purchase, void, credit.
 	 * See docs for more information.

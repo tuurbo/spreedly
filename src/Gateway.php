@@ -8,8 +8,10 @@ class Gateway {
 	public $gatewayToken;
 
 	/**
-	 * Create Curl instance and set token.
+	 * Create a Guzzle instance and set token.
 	 *
+	 * @param  \GuzzleHttp\Client $client
+	 * @param  array $config
 	 * @param  string $gatewayToken optional
 	 * @return void
 	 */
@@ -27,7 +29,7 @@ class Gateway {
 	 *		Spreedly::gateway()->setup();
 	 * </code>
 	 *
-	 * @return mixed
+	 * @return \Tuurbo\Spreedly\Client
 	 */
 	public function setup()
 	{
@@ -42,7 +44,7 @@ class Gateway {
 	 * </code>
 	 *
 	 * @param  string $gatewayToken optional
-	 * @return mixed
+	 * @return \Tuurbo\Spreedly\Client
 	 */
 	public function all($gatewayToken = null)
 	{
@@ -64,7 +66,7 @@ class Gateway {
 	 *
 	 * @param  string $gateway
 	 * @param  array  $data    optional
-	 * @return mixed
+	 * @return \Tuurbo\Spreedly\Client
 	 */
 	public function create($gateway, array $data = null)
 	{
@@ -93,7 +95,7 @@ class Gateway {
 	 * </code>
 	 *
 	 * @param  array  $data
-	 * @return mixed
+	 * @return \Tuurbo\Spreedly\Client
 	 */
 	public function update(array $data)
 	{
@@ -114,7 +116,7 @@ class Gateway {
 	 *		Spreedly::gateway($gatewayToken)->disable();
 	 * </code>
 	 *
-	 * @return mixed
+	 * @return \Tuurbo\Spreedly\Client
 	 */
 	public function disable()
 	{
@@ -124,13 +126,18 @@ class Gateway {
 		return $this->client->request('https://core.spreedly.com/v1/gateways/'.$this->gatewayToken.'/redact.xml', 'put');
 	}
 
+	/**
+	 * Retrieve the gateway token
+	 *
+	 * @return string
+	 */
 	public function getToken()
 	{
 		return $this->gatewayToken;
 	}
 
 	/**
-	 * Magic Method for calling Spreedly/Payment instance.
+	 * Handle dynamic calls for \Tuurbo\Spreedly\Payment.
 	 *
 	 * Useful when you don't want to use the default gateway.
 	 *
@@ -138,6 +145,10 @@ class Gateway {
 	 *		// Charge a payment method on a non-default gateway.
 	 *		Spreedly::gateway($gatewayToken)->payment($paymentToken)->purchase();
 	 * </code>
+	 *
+	 * @param  string  $method
+	 * @param  array   $parameters
+	 * @return mixed
 	 */
 	public function __call($method, $params)
 	{

@@ -12,7 +12,8 @@ class Client {
 	/**
 	 * Set config
 	 *
-	 * @param  string $gatewayToken optional
+	 * @param  \GuzzleHttp\ClientInterface $client
+	 * @param  array $config
 	 * @return void
 	 */
 	public function __construct(GuzzleInterface $client, $config)
@@ -37,10 +38,6 @@ class Client {
 		}
 
 		$response = $this->client->{$method}($url, $this->buildData($data));
-
-		// dd($response->getStatusCode());
-		// dd($response->getHeader('Content-Type'));
-		// echo $response->getBody(); exit;
 
 		if (! in_array($response->getStatusCode(), [200, 201]))
 		{
@@ -73,11 +70,12 @@ class Client {
 		return $this;
 	}
 
-	public function getStatus()
-	{
-		return $this->status;
-	}
-
+	/**
+	 * Set the response from Guzzle
+	 *
+	 * @param  mixed  $response
+	 * @return void
+	 */
 	public function setResponse($response)
 	{
 		if ($response instanceof GuzzleResponse)
@@ -97,6 +95,12 @@ class Client {
 		$this->response = $this->cleanArray($response);
 	}
 
+	/**
+	 * Get the response from Guzzle as an array
+	 *
+	 * @param  string  $key
+	 * @return array
+	 */
 	public function response($key = null)
 	{
 		$array = $this->response;
@@ -123,21 +127,41 @@ class Client {
 		return $this->response['message'];
 	}
 
+	/**
+	 * Check if payment purchase has declined
+	 *
+	 * @return bool
+	 */
 	public function hasDeclined()
 	{
 		return !! $this->declined();
 	}
 
+	/**
+	 * Get the transaction token
+	 *
+	 * @return string
+	 */
 	public function transactionToken()
 	{
 		return $this->response['token'];
 	}
 
+	/**
+	 * Get the payment token
+	 *
+	 * @return string
+	 */
 	public function paymentToken()
 	{
 		return $this->response['payment_method']['token'];
 	}
 
+	/**
+	 * Get an array or string of errors
+	 *
+	 * @return array|string
+	 */
 	public function errors($string = false)
 	{
 		if (! isset($this->response['error']))
@@ -155,16 +179,31 @@ class Client {
 		return $errors;
 	}
 
+	/**
+	 * Check if call returned errors
+	 *
+	 * @return bool
+	 */
 	public function hasErrors()
 	{
 		return isset($this->response['error']);
 	}
 
+	/**
+	 * Check if call was successfull
+	 *
+	 * @return bool
+	 */
 	public function success()
 	{
 		return $this->status == 'success';
 	}
 
+	/**
+	 * Check if call failed or purchase declined
+	 *
+	 * @return bool
+	 */
 	public function fails()
 	{
 		return $this->status == 'error';
@@ -189,16 +228,6 @@ class Client {
 			'body' => $xml
 		];
 	}
-
-	/*protected function recursiveUnset($array, $unwantedKey) {
-		unset($array[$unwantedKey]);
-		foreach ($array as $key => $value) {
-			if (is_array($value)) {
-				$array[$key] = $this->recursiveUnset($value, $unwantedKey);
-			}
-		}
-		return $array;
-	}*/
 
 	protected function arrayToXml($array)
 	{

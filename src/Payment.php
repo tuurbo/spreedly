@@ -9,8 +9,10 @@ class Payment {
 	public $paymentToken;
 
 	/**
-	 * Create Curl instance and set tokens.
+	 * Create a Guzzle instance and set tokens.
 	 *
+	 * @param  \GuzzleHttp\Client $client
+	 * @param  array $config
 	 * @param  string $paymentToken optional
 	 * @param  string $gatewayToken optional
 	 * @return void
@@ -26,7 +28,7 @@ class Payment {
 	 * Get a list of all payment methods you've created on Spreedly.
 	 *
 	 * @param  string $paymentToken optional
-	 * @return mixed
+	 * @return \Tuurbo\Spreedly\Client
 	 */
 	public function all($paymentToken = null)
 	{
@@ -42,7 +44,7 @@ class Payment {
 	 * Create a payment method on Spreedly.
 	 *
 	 * @param  array  $data
-	 * @return mixed
+	 * @return \Tuurbo\Spreedly\Client
 	 */
 	public function create(array $data)
 	{
@@ -57,7 +59,7 @@ class Payment {
 	 * Update a payment method on Spreedly.
 	 *
 	 * @param  array  $data
-	 * @return mixed
+	 * @return \Tuurbo\Spreedly\Client
 	 */
 	public function update(array $data)
 	{
@@ -74,7 +76,7 @@ class Payment {
 	/**
 	 * Retain a payment method on Spreedly.
 	 *
-	 * @return mixed
+	 * @return \Tuurbo\Spreedly\Client
 	 */
 	public function retain()
 	{
@@ -87,7 +89,7 @@ class Payment {
 	/**
 	 * Store/Vault a payment method to a third party, like Braintree or Quickpay.
 	 *
-	 * @return mixed
+	 * @return \Tuurbo\Spreedly\Client
 	 */
 	public function store()
 	{
@@ -109,7 +111,7 @@ class Payment {
 	/**
 	 * Get details of a payment method on Spreedly.
 	 *
-	 * @return mixed
+	 * @return \Tuurbo\Spreedly\Client
 	 */
 	public function get()
 	{
@@ -122,7 +124,7 @@ class Payment {
 	/**
 	 * Disable a payment method stored on Spreedly.
 	 *
-	 * @return mixed
+	 * @return \Tuurbo\Spreedly\Client
 	 */
 	public function disable()
 	{
@@ -136,7 +138,7 @@ class Payment {
 	 * View all transactions of a specific payment method.
 	 *
 	 * @param  strong $paymentToken optional
-	 * @return mixed
+	 * @return \Tuurbo\Spreedly\Client
 	 */
 	public function transactions($paymentToken = null)
 	{

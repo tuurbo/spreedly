@@ -15,7 +15,7 @@ class Spreedly {
 	 * Create a Gateway instance.
 	 *
 	 * @param  string  $token   optional
-	 * @return Spreedly\Gateway
+	 * @return \Tuurbo\Spreedly\Gateway
 	 */
 	public function gateway($token = null)
 	{
@@ -25,8 +25,8 @@ class Spreedly {
 	/**
 	 * Create a Payment instance.
 	 *
-	 * @param  string  $token   optional
-	 * @return Spreedly\Payment
+	 * @param  string  $paymentToken   optional
+	 * @return \Tuurbo\Spreedly\Payment
 	 */
 	public function payment($paymentToken = null)
 	{
@@ -37,7 +37,7 @@ class Spreedly {
 	 * Create a Transaction instance.
 	 *
 	 * @param  string  $token   optional
-	 * @return Spreedly\Transaction
+	 * @return \Tuurbo\Spreedly\Transaction
 	 */
 	public function transaction($token = null)
 	{
@@ -45,11 +45,12 @@ class Spreedly {
 	}
 
 	/**
-	 * Get config and convert to object
+	 * Set config
 	 *
-	 * @return object
+	 * @param  array  $config
+	 * @return $this
 	 */
-	public function setConfig(array $config = null)
+	public function setConfig(array $config)
 	{
 		$this->config = $config;
 
@@ -58,6 +59,11 @@ class Spreedly {
 		return $this;
 	}
 
+	/**
+	 * Check config for required params
+	 *
+	 * @return void
+	 */
 	protected function checkConfig()
 	{
 		if (! isset($this->config['key']))
@@ -67,6 +73,11 @@ class Spreedly {
 			throw new Exceptions\InvalidConfigException;
 	}
 
+	/**
+	 * Create Guzzle instance
+	 *
+	 * @return \GuzzleHttp\Client
+	 */
 	protected function client()
 	{
 		return new Client(new Guzzle, $this->config);
