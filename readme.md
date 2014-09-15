@@ -5,7 +5,7 @@
 Install through Composer.
 ```
 "require": {
-    "tuurbo/amazon-payment": "~0.9"
+    "tuurbo/spreedly": "~0.9"
 }
 ```
 
