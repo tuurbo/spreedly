@@ -30,9 +30,15 @@ Next, update app/config/app.php to include a reference to this package's service
 Add to app/config/services.php config file.
 ```
 return [
-    'key' => '', // Environment key
-    'secret' => '', // Signing Secret
-    'gateway' => '', // Default gateway
+
+    ...
+
+    'spreedly' => [
+        'key' => '', // Environment key
+        'secret' => '', // Signing Secret
+        'gateway' => '', // Default gateway
+    ]
+
 ];
 ```
 
