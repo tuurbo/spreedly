@@ -25,13 +25,14 @@ Next, update app/config/app.php to include a reference to this package's service
 ]
 ```
 
-Add to app/config/services.php config file.
 [Login](https://spreedly.com) to your spreedly account to retrieve your api credentials. You can set your default gateway once you've created your first gateway.
+
+Add to app/config/services.php config file.
 ```
 return [
     'key' => '', // Environment key
-    'secret' => '',  // Signing Secret
-    'defaultGateway' => '',
+    'secret' => '', // Signing Secret
+    'gateway' => '', // Default gateway
 ];
 ```
 
@@ -40,7 +41,7 @@ return [
 ```
 $config = [
     'key' => '', // Environment key
-    'secret' => '',  // Signing Secret
+    'secret' => '', // Signing Secret
     'gateway' => '', // Default gateway
 ];
 
