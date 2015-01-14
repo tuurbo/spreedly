@@ -48,7 +48,7 @@ class SpreedlySpec extends ObjectBehavior {
 		];
 
 		$this->shouldThrow('Tuurbo\Spreedly\Exceptions\InvalidConfigException')
-			->duringSetConfig();
+			->duringSetConfig($config);
 	}
 
 	function it_throws_an_exception_if_gateway_token_is_not_set()
