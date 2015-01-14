@@ -218,8 +218,8 @@ class Client {
 				$this->config['key'],
 				$this->config['secret']
 			],
-			'timeout' => 10,
-			'connect_timeout' => 10,
+			'timeout' => isset($this->config['timeout']) ? $this->config['timeout'] : 15,
+			'connect_timeout' => isset($this->config['connect_timeout']) ? $this->config['connect_timeout'] : 10,
 			'exceptions' => false,
 			'headers' => [
 				'Content-type' => 'application/xml',
