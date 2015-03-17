@@ -125,7 +125,7 @@ class Gateway {
 
 		return $this->client->request('https://core.spreedly.com/v1/gateways/'.$this->gatewayToken.'/redact.xml', 'put');
 	}
-    
+
 	/**
 	 * Handle dynamic calls for \Tuurbo\Spreedly\Payment.
 	 *
@@ -142,9 +142,9 @@ class Gateway {
 	public function payment($paymentToken = null)
 	{
 		if (! $this->gatewayToken)
-            throw new Exceptions\MissingGatewayTokenException;
+			throw new Exceptions\MissingGatewayTokenException;
 
-        return new Payment($this->client, $this->config, $paymentToken, $this->gatewayToken);
+		return new Payment($this->client, $this->config, $paymentToken, $this->gatewayToken);
 	}
 
 	/**
@@ -157,15 +157,15 @@ class Gateway {
 		return $this->gatewayToken;
 	}
 
-    /**
-     * 
-     * @param  string  $method
+	/**
+	 * 
+	 * @param  string  $method
 	 * @param  array   $parameters
 	 * @throws Exceptions\InvalidPaymentMethodException
-     */
+	 */
 	public function __call($method, $parameters)
 	{
-        throw new Exceptions\InvalidPaymentMethodException($method.' is an invalid method.');
+		throw new Exceptions\InvalidPaymentMethodException($method.' is an invalid method.');
 	}
 
 }
