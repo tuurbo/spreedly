@@ -141,6 +141,17 @@ You should only keep around the sensitive information of payment methods that yo
 Spreedly::payment($paymentToken)->disable();
 ```
 
+## Verify a Stored Payment Method
+
+Ask a gateway if a payment method is in good standing.
+
+```
+Spreedly::payment($paymentToken)->verify();
+
+// Retain the card if it has been successfully verified
+Spreedly::payment($paymentToken)->verify(true); // 
+```
+
 ## Get a Payment Methods details
 
 Get the details of a specific payment method.
