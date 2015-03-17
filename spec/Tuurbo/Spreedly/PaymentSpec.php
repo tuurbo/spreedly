@@ -205,4 +205,23 @@ class PaymentSpec extends ObjectBehavior {
 			->during('authorize', []);
 	}
 
+	function it_verifies_a_payment($client)
+	{
+		$data = [
+			'transaction' => [
+				'payment_method_token' => $this->paymentToken,
+				'retain_on_success' => false,
+				'currency_code' => 'USD'
+			]
+		];
+
+		$client->request('https://core.spreedly.com/v1/gateways/'.self::GATEWAY_TOKEN.'/verify.xml', 'post', $data)
+			->shouldBeCalled()
+			->willReturn($client);
+
+		$this->verify(false, [
+			'currency_code' => 'USD'
+		])->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
+	}
+
 }
