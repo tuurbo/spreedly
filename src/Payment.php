@@ -149,6 +149,12 @@ class Payment {
 		if (! $this->gatewayToken)
 			throw new Exceptions\MissingGatewayTokenException;
 
+		$params += array(
+			'transaction' => [
+				'payment_method_token' => $this->paymentToken
+			],
+		);
+		
 		return $this->client->request('https://core.spreedly.com/v1/gateways/'.$this->gatewayToken.'/verify.xml', 'post', $params);
 	}
 
