@@ -135,6 +135,36 @@ class Payment {
 	}
 
 	/**
+	 * Ask a gateway if a payment method is in good standing.
+	 *
+	 * @param  array  $params
+	 * @return \Tuurbo\Spreedly\Client
+	 * @link https://docs.spreedly.com/reference/api/v1/gateways/verify/
+	 */
+	public function verify($retain = false, array $data = null)
+	{
+		if (! $this->paymentToken)
+			throw new Exceptions\MissingPaymentTokenException;
+
+		if (! $this->gatewayToken)
+			throw new Exceptions\MissingGatewayTokenException;
+
+		$params = [
+			'transaction' => [
+				'payment_method_token' => $this->paymentToken,
+				'retain_on_success' => $retain
+			]
+		];
+
+		if (is_array($data))
+		{
+			$params['transaction'] += $data;
+		}
+
+		return $this->client->request('https://core.spreedly.com/v1/gateways/'.$this->gatewayToken.'/verify.xml', 'post', $params);
+	}
+
+	/**
 	 * View all transactions of a specific payment method.
 	 *
 	 * @param  strong $paymentToken optional

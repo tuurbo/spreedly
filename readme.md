@@ -110,6 +110,7 @@ Spreedly::payment()->get();
 Spreedly::payment()->transactions();
 Spreedly::payment()->purchase();
 Spreedly::payment()->authorize();
+Spreedly::payment()->verify();
 
 // Transaction calls
 Spreedly::transaction()->all();
