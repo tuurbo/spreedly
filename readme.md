@@ -16,7 +16,7 @@ Next, update app/config/app.php to include a reference to this package's service
 ```
 'providers' => [
     ...
-   'Tuurbo\Spreedly\SpreedlyPaymentServiceProvider'
+   'Tuurbo\Spreedly\SpreedlyServiceProvider'
 ]
 
 'aliases' => [
