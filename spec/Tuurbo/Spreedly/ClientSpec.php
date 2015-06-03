@@ -18,8 +18,11 @@ class ClientSpec extends ObjectBehavior {
 		];
 
 		$this->beConstructedWith($client, $config);
+	}
 
-		$this->shouldHaveType('Tuurbo\Spreedly\Client');
+	function letGo()
+	{
+		$this->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
 	}
 
 	function it_returns_an_array()
