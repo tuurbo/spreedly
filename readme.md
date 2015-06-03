@@ -56,6 +56,15 @@ $spreedly = new Tuurbo\Spreedly\Spreedly($config);
 $resp = $spreedly->payment(...)->purchase(4.99);
 ```
 
+If you put your configs into `config/services.php` then you can do:
+
+```
+$spreedly = new Spreedly( config('services.spreedly') );
+
+$resp = $spreedly->payment(...)->purchase(4.99);
+
+```
+
 ## Example response handling
 
 ```
