@@ -167,10 +167,11 @@ class Payment {
 	/**
 	 * View all transactions of a specific payment method.
 	 *
-	 * @param  strong $paymentToken optional
+	 * @param  string $paymentToken optional
+	 * @param  array $data optional
 	 * @return \Tuurbo\Spreedly\Client
 	 */
-	public function transactions($paymentToken = null)
+	public function transactions($paymentToken = null, array $data = [])
 	{
 		if (! $this->paymentToken)
 			throw new Exceptions\MissingPaymentTokenException;
@@ -180,7 +181,7 @@ class Payment {
 		if ($paymentToken)
 			$append = '?since_token='.$paymentToken;
 
-		return $this->client->request('https://core.spreedly.com/v1/payment_methods/'.$this->paymentToken.'/transactions.xml'.$append);
+		return $this->client->request('https://core.spreedly.com/v1/payment_methods/'.$this->paymentToken.'/transactions.xml'.$append, 'get', $data);
 	}
 
 	/**

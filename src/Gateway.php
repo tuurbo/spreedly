@@ -146,26 +146,36 @@ class Gateway {
 
 		return new Payment($this->client, $this->config, $paymentToken, $this->gatewayToken);
 	}
-	
+
 	/**
-	 * Retrieve a paginated list of all transactions for a gateway.
+	 * View all transactions of a specific gateway.
 	 *
 	 * <code>
 	 *		Spreedly::gateway($gatewayToken)->transactions();
-	 * 
+	 *
+	 *		// Paginate
 	 *		Spreedly::gateway($gatewayToken)->transactions($transactionToken);
+	 *
+	 *		// Paginate and sort
+	 *		Spreedly::gateway($gatewayToken)->transactions($transactionToken, ['order' => 'desc']);
 	 * </code>
 	 *
+	 * @param  string $paymentToken optional
 	 * @param  array $data optional
 	 * @link https://docs.spreedly.com/reference/api/v1/gateways/transactions/
 	 * @return \Tuurbo\Spreedly\Client
 	 */
-	public function transactions($data = [])
+	public function transactions($paymentToken = null, array $data = [])
 	{
 		if (! $this->gatewayToken)
 			throw new Exceptions\MissingGatewayTokenException;
 
-		return $this->client->request('https://core.spreedly.com/v1/gateways/'.$this->gatewayToken.'/transactions.xml', 'get', $data);
+		$append = '';
+
+		if ($paymentToken)
+			$append = '?since_token='.$paymentToken;
+
+		return $this->client->request('https://core.spreedly.com/v1/gateways/'.$this->gatewayToken.'/transactions.xml'.$append, 'get', $data);
 	}
 
 	/**

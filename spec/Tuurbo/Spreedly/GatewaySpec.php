@@ -43,6 +43,28 @@ class GatewaySpec extends ObjectBehavior {
 		$this->all(self::GATEWAY_TOKEN)->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
 	}
 
+	function it_gets_a_list_of_all_gateway_transactions_for_a_single_gateway($client)
+	{
+		$client->request('https://core.spreedly.com/v1/gateways/'.self::GATEWAY_TOKEN.'/transactions.xml', 'get', Argument::type('array'))
+			->shouldBeCalled()
+			->willReturn($client);
+
+		$this->transactions()->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
+	}
+
+	function it_gets_a_list_of_all_gateway_transactions_for_a_single_gateway_and_paginates($client)
+	{
+		$data = [
+			'order' => 'desc'
+		];
+
+		$client->request('https://core.spreedly.com/v1/gateways/'.self::GATEWAY_TOKEN.'/transactions.xml?since_token='.self::PAYMENT_TOKEN, 'get', $data)
+			->shouldBeCalled()
+			->willReturn($client);
+
+		$this->transactions(self::PAYMENT_TOKEN, $data)->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
+	}
+
 	function it_creates_a_gateway($client)
 	{
 		$client->request('https://core.spreedly.com/v1/gateways.xml', 'post', Argument::type('array'))

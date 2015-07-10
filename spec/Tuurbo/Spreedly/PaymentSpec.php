@@ -99,7 +99,7 @@ class PaymentSpec extends ObjectBehavior {
 
 	function it_gets_a_list_of_all_transactions_for_a_single_payment_method($client)
 	{
-		$client->request('https://core.spreedly.com/v1/payment_methods/'.self::PAYMENT_TOKEN.'/transactions.xml')
+		$client->request('https://core.spreedly.com/v1/payment_methods/'.self::PAYMENT_TOKEN.'/transactions.xml', 'get', Argument::type('array'))
 			->shouldBeCalled()
 			->willReturn($client);
 
@@ -108,11 +108,15 @@ class PaymentSpec extends ObjectBehavior {
 
 	function it_gets_a_list_of_all_transactions_for_a_single_payment_method_and_paginates($client)
 	{
-		$client->request('https://core.spreedly.com/v1/payment_methods/'.self::PAYMENT_TOKEN.'/transactions.xml?since_token='.self::PAYMENT_TOKEN)
+		$data = [
+			'order' => 'desc'
+		];
+
+		$client->request('https://core.spreedly.com/v1/payment_methods/'.self::PAYMENT_TOKEN.'/transactions.xml?since_token='.self::PAYMENT_TOKEN, 'get', $data )
 			->shouldBeCalled()
 			->willReturn($client);
 
-		$this->transactions(self::PAYMENT_TOKEN)->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
+		$this->transactions(self::PAYMENT_TOKEN, $data)->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
 	}
 
 	function it_makes_a_purchase($client)
