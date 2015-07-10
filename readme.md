@@ -94,6 +94,7 @@ Spreedly::gateway()->create();
 Spreedly::gateway()->all();
 Spreedly::gateway()->disable();
 Spreedly::gateway()->update();
+Spreedly::gateway()->transactions();
 
 // If using multiple gateways, you can set the gateway token before the payment call.
 Spreedly::gateway()->payment()->purchase();
