@@ -146,6 +146,27 @@ class Gateway {
 
 		return new Payment($this->client, $this->config, $paymentToken, $this->gatewayToken);
 	}
+	
+	/**
+	 * Retrieve a paginated list of all transactions for a gateway.
+	 *
+	 * <code>
+	 *		Spreedly::gateway($gatewayToken)->transactions();
+	 * 
+	 *		Spreedly::gateway($gatewayToken)->transactions($transactionToken);
+	 * </code>
+	 *
+	 * @param  array $data optional
+	 * @link https://docs.spreedly.com/reference/api/v1/gateways/transactions/
+	 * @return \Tuurbo\Spreedly\Client
+	 */
+	public function transactions($data = [])
+	{
+		if (! $this->gatewayToken)
+			throw new Exceptions\MissingGatewayTokenException;
+
+		return $this->client->request('https://core.spreedly.com/v1/gateways/'.$this->gatewayToken.'/transactions.xml', 'get', $data);
+	}
 
 	/**
 	 * Retrieve the gateway token
