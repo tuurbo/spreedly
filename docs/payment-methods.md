@@ -214,6 +214,6 @@ View all transactions of a specific payment method. The transactions returned wi
 ```
 Spreedly::payment($paymentToken)->transactions();
 
-// If you have more than 20 transactions, you can always paginate to get teh remainder after the token specified.
+// If you have more than 20 transactions, you can always paginate to get the remainder after the token specified.
 Spreedly::payment($paymentToken)->transactions($transactionToken);
 ```
