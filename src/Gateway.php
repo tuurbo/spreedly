@@ -156,20 +156,16 @@ class Gateway {
 	 *		Spreedly::gateway($gatewayToken)->transactions($transactionToken);
 	 * </code>
 	 *
-	 * @param  string $transactionToken optional
+	 * @param  array $data optional
 	 * @link https://docs.spreedly.com/reference/api/v1/gateways/transactions/
 	 * @return \Tuurbo\Spreedly\Client
 	 */
-	public function transactions($transactionToken = null)
+	public function transactions($data = [])
 	{
 		if (! $this->gatewayToken)
 			throw new Exceptions\MissingGatewayTokenException;
 
-		$append = '';
-		if ($transactionToken)
-			$append = '?since_token='.$transactionToken;
-
-		return $this->client->request('https://core.spreedly.com/v1/gateways/'.$this->gatewayToken.'/transactions.xml' . $append, 'get');
+		return $this->client->request('https://core.spreedly.com/v1/gateways/'.$this->gatewayToken.'/transactions.xml', 'get', $data);
 	}
 
 	/**
