@@ -83,4 +83,39 @@ class TransactionSpec extends ObjectBehavior {
 		$this->credit($amount)->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
 	}
 
+	function it_captures_an_authorized_amount($client)
+	{
+		$amount = 9.99;
+
+		$data = [
+			'transaction' => [
+				'currency_code' => 'USD'
+			]
+		];
+
+		$client->request('https://core.spreedly.com/v1/transactions/'.self::TRANSACTION_TOKEN.'/capture.xml', 'post', $data)
+			->shouldBeCalled()
+			->willReturn($client);
+
+		$this->capture()->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
+	}
+
+	function it_captures_a_specific_authorized_amount($client)
+	{
+		$amount = 9.99;
+
+		$data = [
+			'transaction' => [
+				'amount' => $amount * 100,
+				'currency_code' => 'USD'
+			]
+		];
+
+		$client->request('https://core.spreedly.com/v1/transactions/'.self::TRANSACTION_TOKEN.'/capture.xml', 'post', $data)
+			->shouldBeCalled()
+			->willReturn($client);
+
+		$this->capture($amount)->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
+	}
+
 }

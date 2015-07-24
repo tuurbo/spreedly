@@ -142,6 +142,34 @@ class Transaction {
 	}
 
 	/**
+	 * Capture an authorization
+	 *
+	 * <code>
+	 *		Spreedly::transaction($transactionToken)->capture();
+	 * </code>
+	 *
+	 * @param  string|numeric $amount
+	 * @param  string $currency
+	 * @param  array $data
+	 * @return \Tuurbo\Spreedly\Client
+	 */
+	public function capture($amount = null, $currency = null, array $data = [])
+	{
+		$params = [
+			'transaction' => [
+				'currency_code' => $currency ?: 'USD'
+			]
+		];
+
+		if ($amount > 0)
+			$params['transaction']['amount'] = $amount * 100;
+
+		$params['transaction'] += $data;
+
+		return $this->client->request('https://core.spreedly.com/v1/transactions/'.$this->transactionToken.'/capture.xml', 'post', $params);
+	}
+
+	/**
 	 * Handle dynamic calls for referencing a transaction.
 	 *
 	 * Can be used to purchase, void, credit.

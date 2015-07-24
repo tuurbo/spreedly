@@ -42,7 +42,7 @@ This allows you to see the full conversation Spreedly had with the payment gatew
 Spreedly::transaction($transactionToken)->transcript();
 ```
 
-## Purchase,  Void, and Credit using a previous Transaction
+## Purchase, Void, and Credit using a previous Transaction
 
 No reason to set the gateway before these methods, since the transactions gateway can't be changed.
 
@@ -58,6 +58,23 @@ Spreedly::transaction($transactionToken)->credit('...AMOUNT(optional)...');
 
 // Example: Specifying some custom data that spreedly allows
 Spreedly::transaction($transactionToken)->purchase(10.98, 'USD', [
+  'ip' => '127.0.0.1',
+  'order_id' => '12345',
+  'description' => 'test description...',
+  'merchant_name_descriptor' => 'Example',
+  'merchant_location_descriptor' => 'http://example.com'
+]);
+```
+
+## Capture using a previous Transaction
+
+No reason to set the gateway, since the transactions gateway can't be changed.
+
+```
+// A capture will take the funds previously that were reserved via an authorization.
+Spreedly::transaction($transactionToken)->capture(10.98);
+Spreedly::transaction($transactionToken)->capture(10.98, 'EUR');
+Spreedly::transaction($transactionToken)->capture(10.98, 'USD', [
   'ip' => '127.0.0.1',
   'order_id' => '12345',
   'description' => 'test description...',
