@@ -5,7 +5,7 @@
 Install through Composer.
 ```
 "require": {
-    "tuurbo/spreedly": "~1.1.0"
+    "tuurbo/spreedly": "~1.2.0"
 }
 ```
 
