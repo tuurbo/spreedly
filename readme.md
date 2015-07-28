@@ -5,7 +5,7 @@
 Install through Composer.
 ```
 "require": {
-    "tuurbo/spreedly": "1.0.*"
+    "tuurbo/spreedly": "~1.1.0"
 }
 ```
 
@@ -121,4 +121,5 @@ Spreedly::transaction()->transcript();
 Spreedly::transaction()->purchase();
 Spreedly::transaction()->void();
 Spreedly::transaction()->credit();
+Spreedly::transaction()->capture();
 ```
