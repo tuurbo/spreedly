@@ -124,7 +124,7 @@ class Client {
 
 	public function declined()
 	{
-		return $this->response['message'];
+		return $this->response('message');
 	}
 
 	/**
@@ -144,7 +144,7 @@ class Client {
 	 */
 	public function transactionToken()
 	{
-		return $this->response['token'];
+		return $this->response('token');
 	}
 
 	/**
@@ -154,7 +154,7 @@ class Client {
 	 */
 	public function paymentToken()
 	{
-		return $this->response['payment_method']['token'];
+		return $this->response('payment_method.token');
 	}
 
 	/**
