@@ -42,7 +42,7 @@ return [
 ];
 ```
 
-#### Default Setup
+#### Default Setup (Non Laravel)
 
 ```
 $config = [
@@ -53,7 +53,7 @@ $config = [
 
 $spreedly = new Tuurbo\Spreedly\Spreedly($config);
 
-$resp = $spreedly->payment(...)->purchase(4.99);
+$resp = $spreedly->payment($paymentToken)->purchase(4.99);
 ```
 
 ## Example response handling
