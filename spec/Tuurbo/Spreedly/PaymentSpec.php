@@ -228,4 +228,21 @@ class PaymentSpec extends ObjectBehavior {
 		])->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
 	}
 
+	function it_makes_a_general_credit($client)
+	{
+		$data = [
+			'transaction' => [
+				'payment_method_token' => self::PAYMENT_TOKEN,
+				'amount' => 10.98,
+				'currency_code' => 'USD'
+			]
+		];
+
+		$client->request('https://core.spreedly.com/v1/gateways/'.self::GATEWAY_TOKEN.'/general_credit.xml', 'post', $data)
+			->shouldBeCalled()
+			->willReturn($client);
+
+		$this->generalCredit(10.98)->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
+	}
+
 }

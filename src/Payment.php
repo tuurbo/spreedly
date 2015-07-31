@@ -135,6 +135,33 @@ class Payment {
 	}
 
 	/**
+	 * Create a general credit
+	 *
+	 * <code>
+	 *		Spreedly::payment($paymentToken)->capture();
+	 * </code>
+	 *
+	 * @param  string|numeric $amount
+	 * @param  string $currency
+	 * @param  array $data
+	 * @return \Tuurbo\Spreedly\Client
+	 */
+	public function generalCredit($amount, $currency = null, array $data = [])
+	{
+		$params = [
+			'transaction' => [
+				'payment_method_token' => $this->paymentToken,
+				'amount' => $amount,
+				'currency_code' => $currency ?: 'USD'
+			]
+		];
+
+		$params['transaction'] += $data;
+
+		return $this->client->request('https://core.spreedly.com/v1/gateways/'.$this->gatewayToken.'/general_credit.xml', 'post', $params);
+	}
+
+	/**
 	 * Ask a gateway if a payment method is in good standing.
 	 *
 	 * @param  array  $params

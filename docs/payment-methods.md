@@ -149,7 +149,7 @@ Ask a gateway if a payment method is in good standing.
 Spreedly::payment($paymentToken)->verify();
 
 // Retain the card if it has been successfully verified
-Spreedly::payment($paymentToken)->verify(true); // 
+Spreedly::payment($paymentToken)->verify(true);
 ```
 
 ## Get a Payment Methods details
@@ -205,6 +205,14 @@ Spreedly::payment($paymentToken)->authorize(10.98, 'USD', [
   'merchant_name_descriptor' => 'Example',
   'merchant_location_descriptor' => 'http://example.com'
 ]);
+```
+
+## Create a general credit (Add funds)
+
+The general credit action can add funds to a credit card. This is different than a credit which refunds money. Support for this capability depends on the gateway.
+
+```
+Spreedly::payment($paymentToken)->generalCredit(10.98);
 ```
 
 ## Transactions for a Payment Method
