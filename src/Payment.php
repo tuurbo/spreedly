@@ -151,7 +151,7 @@ class Payment {
 		$params = [
 			'transaction' => [
 				'payment_method_token' => $this->paymentToken,
-				'amount' => $amount,
+				'amount' => $amount * 100,
 				'currency_code' => $currency ?: 'USD'
 			]
 		];
