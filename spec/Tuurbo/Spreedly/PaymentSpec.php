@@ -233,7 +233,7 @@ class PaymentSpec extends ObjectBehavior {
 		$data = [
 			'transaction' => [
 				'payment_method_token' => self::PAYMENT_TOKEN,
-				'amount' => 10.98,
+				'amount' => 10.98 * 100,
 				'currency_code' => 'USD'
 			]
 		];
