@@ -203,11 +203,14 @@ class Transaction {
 
 		if (in_array($method, ['purchase', 'credit']))
 		{
-			$params = [
-				'transaction' => [
-					'amount' => $parameters[0] * 100
-				]
-			];
+
+			if(isset($parameters[0])) {
+				$params = [
+					'transaction' => [
+						'amount' => $parameters[0] * 100
+					]
+				];
+			}
 
 			if ($method == 'purchase')
 				$params['transaction']['currency_code'] = isset($parameters[1]) ? $parameters[1] : 'USD';
