@@ -53,6 +53,12 @@ class TransactionSpec extends ObjectBehavior {
 		$this->purchase($amount)->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
 	}
 
+	function it_makes_a_purchase_with_no_amount_specified($client)
+	{
+		$this->shouldThrow('Tuurbo\Spreedly\Exceptions\InvalidAmountException')
+			->duringPurchase();
+	}
+
 	function it_voids_a_purchase($client)
 	{
 		$amount = 9.99;
@@ -81,6 +87,15 @@ class TransactionSpec extends ObjectBehavior {
 			->willReturn($client);
 
 		$this->credit($amount)->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
+	}
+
+	function it_credits_a_purchase_with_no_amount_specified($client)
+	{
+		$client->request('https://core.spreedly.com/v1/transactions/'.self::TRANSACTION_TOKEN.'/credit.xml', 'post', [])
+			->shouldBeCalled()
+			->willReturn($client);
+
+		$this->credit()->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
 	}
 
 	function it_captures_an_authorized_amount($client)
