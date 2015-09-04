@@ -1,7 +1,7 @@
 <?php namespace Tuurbo\Spreedly;
 
 use GuzzleHttp\ClientInterface as GuzzleInterface;
-use GuzzleHttp\Message\Response as GuzzleResponse;
+use GuzzleHttp\Psr7\Response as GuzzleResponse;
 
 class Client {
 
@@ -80,9 +80,11 @@ class Client {
 	{
 		if ($response instanceof GuzzleResponse)
 		{
-			if ($response->getHeader('Content-Type') === 'application/xml; charset=utf-8')
+			$contentType = $response->getHeader('Content-Type');
+
+			if (array_shift($contentType) === 'application/xml; charset=utf-8')
 			{
-				$response = $response->xml();
+				$response = simplexml_load_string($response->getBody());
 			}
 			else
 			{
