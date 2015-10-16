@@ -3,7 +3,7 @@
 ## Setup/Install
 
 Install through Composer.
-```
+```json
 "require": {
     "tuurbo/spreedly": "~1.3.0"
 }
@@ -13,7 +13,7 @@ Install through Composer.
 
 Next, update app/config/app.php to include a reference to this package's service provider in the providers array and the facade in the aliases array.
 
-```
+```php
 'providers' => [
     ...
    'Tuurbo\Spreedly\SpreedlyServiceProvider'
@@ -28,7 +28,7 @@ Next, update app/config/app.php to include a reference to this package's service
 [Login](https://spreedly.com) to your spreedly account to retrieve your api credentials. You can set your default gateway once you've created your first gateway.
 
 Add to app/config/services.php config file.
-```
+```php
 return [
 
     ...
@@ -44,7 +44,7 @@ return [
 
 #### Default Setup (Non Laravel)
 
-```
+```php
 $config = [
     'key' => '', // Environment key
     'secret' => '', // Signing Secret
@@ -58,7 +58,7 @@ $resp = $spreedly->payment($paymentToken)->purchase(4.99);
 
 ## Example response handling
 
-```
+```php
 // If the call to spreedly is successfull
 if ($resp->success()) {
     return $resp->response();
@@ -87,7 +87,7 @@ if ($resp->fails()) {
 
 **NOTE: Many of the methods below return multiple tokens. Be sure when storing tokens, you store the correct ones for later use.**
 
-```
+```php
 // Gateway calls.
 Spreedly::gateway()->setup();
 Spreedly::gateway()->create();
