@@ -158,6 +158,33 @@ class PaymentSpec extends ObjectBehavior {
 		$this->purchase($amount, $currency)->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
 	}
 
+	function it_makes_a_purchase_with_extra_data($client)
+	{
+		$amount = 9.99;
+		$currency = 'USD';
+
+		$data = [
+			'transaction' => [
+				'payment_method_token' => $this->paymentToken,
+				'amount' => $amount * 100,
+				'currency_code' => $currency
+			]
+		];
+
+		$extra = [
+			'order_id' => 12345,
+			'description' => 'stuff'
+		];
+
+		$data['transaction'] += $extra;
+
+		$client->request('https://core.spreedly.com/v1/gateways/'.self::GATEWAY_TOKEN.'/purchase.xml', 'post', $data)
+			->shouldBeCalled()
+			->willReturn($client);
+
+		$this->purchase($amount, $currency, $extra)->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
+	}
+
 	function it_throws_an_exception_when_trying_to_make_a_purchase_with_an_invalid_amount()
 	{
 		$this->shouldThrow('Tuurbo\Spreedly\Exceptions\InvalidAmountException')
