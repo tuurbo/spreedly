@@ -156,7 +156,8 @@ class Payment {
 			]
 		];
 
-		$params['transaction'] += $data;
+		if ($data)
+			$params['transaction'] += $data;
 
 		return $this->client->request('https://core.spreedly.com/v1/gateways/'.$this->gatewayToken.'/general_credit.xml', 'post', $params);
 	}
@@ -212,9 +213,28 @@ class Payment {
 	}
 
 	/**
-	 * Magic Method for payment methods.
+	 * Can be used to authorize.
 	 *
-	 * Can be used to charge or authorize.
+	 * <code>
+	 *		// Authorize a payment method on the default gateway.
+	 *		Spreedly::payment($paymentToken)->authorize(1.99);
+	 *
+	 *		// Set currency to Euros.
+	 *		Spreedly::payment($paymentToken)->authorize(1.99, 'EUR');
+	 * </code>
+	 *
+	 * @param  float   $amount
+	 * @param  string  $currency
+	 * @param  array   $data
+	 * @return mixed
+	 */
+	public function authorize($amount, $currency = 'USD', array $data = [])
+	{
+		return $this->createTransaction('authorize', $amount, $currency, $data);
+	}
+
+	/**
+	 * Can be used to charge.
 	 *
 	 * <code>
 	 *		// Charge a payment method on the default gateway.
@@ -224,36 +244,61 @@ class Payment {
 	 *		Spreedly::payment($paymentToken)->purchase(1.99, 'EUR');
 	 * </code>
 	 *
-	 * @param  string  $method
-	 * @param  array   $parameters
+	 * @param  float   $amount
+	 * @param  string  $currency
+	 * @param  array   $data
 	 * @return mixed
 	 */
-	public function __call($method, $parameters)
+	public function purchase($amount, $currency = 'USD', array $data = [])
 	{
-		if (! in_array($method, ['purchase', 'authorize']))
-			throw new Exceptions\InvalidPaymentMethodException($method.' is an invalid payment method.');
+		return $this->createTransaction('purchase', $amount, $currency, $data);
+	}
 
+	/**
+	 * Can be used to charge or authorize.
+	 *
+	 * @param  string $method
+	 * @param  float $amount
+	 * @param  string $currency
+	 * @param  array $data
+	 * @return mixed
+	 * @throws Exceptions\InvalidAmountException
+	 * @throws Exceptions\MissingGatewayTokenException
+	 * @throws Exceptions\MissingPaymentTokenException
+	 */
+	protected function createTransaction($method, $amount, $currency, array $data)
+	{
 		if (! $this->gatewayToken)
 			throw new Exceptions\MissingGatewayTokenException;
 
 		if (! $this->paymentToken)
 			throw new Exceptions\MissingPaymentTokenException;
 
-		if (! isset($parameters[0]) || $parameters[0] <= 0)
+		if ($amount <= 0)
 			throw new Exceptions\InvalidAmountException($method.' method requires an amount greater than 0.');
 
 		$params = [
 			'transaction' => [
 				'payment_method_token' => $this->paymentToken,
-				'amount' => $parameters[0] * 100,
-				'currency_code' => isset($parameters[1]) ? $parameters[1] : 'USD'
+				'amount' => $amount * 100,
+				'currency_code' => $currency
 			]
 		];
 
-		if (isset($parameters[2]) && is_array($parameters[2]))
-			$params['transaction'] += $parameters[2];
+		if ($data)
+			$params['transaction'] += $data;
 
 		return $this->client->request('https://core.spreedly.com/v1/gateways/'.$this->gatewayToken.'/'.$method.'.xml', 'post', $params);
+	}
+
+	/**
+	 * @param  string  $method
+	 * @param  array   $parameters
+	 * @throws Exceptions\InvalidPaymentMethodException
+	 */
+	public function __call($method, $parameters)
+	{
+		throw new Exceptions\InvalidPaymentMethodException($method.' is an invalid payment method.');
 	}
 
 }

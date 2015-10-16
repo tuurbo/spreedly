@@ -158,10 +158,10 @@ class PaymentSpec extends ObjectBehavior {
 		$this->purchase($amount, $currency)->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
 	}
 
-	function it_throws_an_exception_when_trying_to_make_a_purchase_without_an_amount($client)
+	function it_throws_an_exception_when_trying_to_make_a_purchase_with_an_invalid_amount()
 	{
 		$this->shouldThrow('Tuurbo\Spreedly\Exceptions\InvalidAmountException')
-			->during('purchase', []);
+			->during('purchase', [-1]);
 	}
 
 	function it_makes_an_authorize($client)
@@ -203,10 +203,10 @@ class PaymentSpec extends ObjectBehavior {
 		$this->authorize($amount, $currency)->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
 	}
 
-	function it_throws_an_exception_when_trying_to_make_an_authorize_without_an_amount($client)
+	function it_throws_an_exception_when_trying_to_make_an_authorize_with_an_invalid_amount()
 	{
 		$this->shouldThrow('Tuurbo\Spreedly\Exceptions\InvalidAmountException')
-			->during('authorize', []);
+			->during('authorize', [-1]);
 	}
 
 	function it_verifies_a_payment($client)
@@ -243,6 +243,12 @@ class PaymentSpec extends ObjectBehavior {
 			->willReturn($client);
 
 		$this->generalCredit(10.98)->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
+	}
+
+	function it_throws_invalid_method_exception()
+	{
+		$this->shouldThrow('Tuurbo\Spreedly\Exceptions\InvalidPaymentMethodException')
+			->during('undefinedMethod', ['some_param']);
 	}
 
 }

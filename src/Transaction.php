@@ -153,11 +153,11 @@ class Transaction {
 	 * @param  array $data
 	 * @return \Tuurbo\Spreedly\Client
 	 */
-	public function capture($amount = null, $currency = null, array $data = [])
+	public function capture($amount = null, $currency = 'USD', array $data = [])
 	{
 		$params = [
 			'transaction' => [
-				'currency_code' => $currency ?: 'USD'
+				'currency_code' => $currency
 			]
 		];
 
@@ -170,9 +170,48 @@ class Transaction {
 	}
 
 	/**
-	 * Handle dynamic calls for referencing a transaction.
+	 * Can be used to credit a transaction.
+	 * See docs for more information.
 	 *
-	 * Can be used to purchase, void, credit.
+	 * <code>
+	 *		// Reverse a charge.
+	 *		Spreedly::transaction($transactionToken)->credit();
+	 *		// Reverse part of a charge by specifying the amount.
+	 *		Spreedly::transaction($transactionToken)->credit(1.99);
+	 * </code>
+	 *
+	 * @param  float|null $amount
+	 * @param  array      $data
+	 * @return mixed
+	 * @throws Exceptions\MissingTransactionTokenException
+	 */
+	public function credit($amount = null, array $data = [])
+	{
+		if (! $this->transactionToken)
+			throw new Exceptions\MissingTransactionTokenException;
+
+		$params = [];
+
+		if ($amount > 0)
+		{
+			$params = [
+				'transaction' => [
+					'amount' => $amount * 100
+				]
+			];
+
+			$params['transaction'] += $data;
+		}
+		else if ($data)
+		{
+			$params['transaction'] = $data;
+		}
+
+		return $this->client->request('https://core.spreedly.com/v1/transactions/'.$this->transactionToken.'/credit.xml', 'post', $params);
+	}
+
+	/**
+	 * Can be used to make a purchase referencing a transaction.
 	 * See docs for more information.
 	 *
 	 * <code>
@@ -184,42 +223,62 @@ class Transaction {
 	 *		Spreedly::transaction($transactionToken)->purchase(1.99, 'EUR');
 	 * </code>
 	 *
-	 * @param  string  $method
-	 * @param  array   $parameters
+	 * @param  float  $amount
+	 * @param  string $currency
+	 * @param  array  $data
 	 * @return mixed
+	 * @throws Exceptions\MissingTransactionTokenException
+	 * @throws Exceptions\InvalidAmountException
 	 */
-	public function __call($method, $parameters)
+	public function purchase($amount, $currency = 'USD', array $data = [])
 	{
-		if (! in_array($method, ['purchase', 'void', 'credit']))
-			throw new Exceptions\InvalidPaymentMethodException($method.' is an invalid payment method.');
-
 		if (! $this->transactionToken)
 			throw new Exceptions\MissingTransactionTokenException;
 
-		if ($method == 'purchase' && ! isset($parameters[0]) || (isset($parameters[0]) && $parameters[0] <= 0))
-			throw new Exceptions\InvalidAmountException($method.' method requires an amount greater than 0.');
+		if ($amount <= 0)
+			throw new Exceptions\InvalidAmountException('purchase method requires an amount greater than 0.');
 
-		$params = [];
+		$params = [
+			'transaction' => [
+				'amount' => $amount * 100,
+				'currency_code' => $currency
+			]
+		];
 
-		if (in_array($method, ['purchase', 'credit']))
-		{
-			if (isset($parameters[0]))
-			{
-				$params = [
-					'transaction' => [
-						'amount' => $parameters[0] * 100
-					]
-				];
-			}
+		$params['transaction'] += $data;
 
-			if ($method == 'purchase')
-				$params['transaction']['currency_code'] = isset($parameters[1]) ? $parameters[1] : 'USD';
+		return $this->client->request('https://core.spreedly.com/v1/transactions/'.$this->transactionToken.'/purchase.xml', 'post', $params);
+	}
 
-			if (isset($parameters[2]) && is_array($parameters[2]))
-				$params += $parameters[2];
-		}
+	/**
+	 * Can be used to void a transaction.
+	 * See docs for more information.
+	 *
+	 * <code>
+	 *		// Void a transaction.
+	 *		Spreedly::transaction($transactionToken)->void();
+	 * </code>
+	 *
+	 * @param  array $data
+	 * @return mixed
+	 * @throws Exceptions\MissingTransactionTokenException
+	 */
+	public function void(array $data = [])
+	{
+		if (! $this->transactionToken)
+			throw new Exceptions\MissingTransactionTokenException;
 
-		return $this->client->request('https://core.spreedly.com/v1/transactions/'.$this->transactionToken.'/'.$method.'.xml', 'post', $params);
+		return $this->client->request('https://core.spreedly.com/v1/transactions/'.$this->transactionToken.'/void.xml', 'post', $data);
+	}
+
+	/**
+	 * @param  string  $method
+	 * @param  array   $parameters
+	 * @throws Exceptions\InvalidPaymentMethodException
+	 */
+	public function __call($method, $parameters)
+	{
+		throw new Exceptions\InvalidPaymentMethodException($method.' is an invalid payment method.');
 	}
 
 }
