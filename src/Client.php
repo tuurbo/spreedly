@@ -41,8 +41,6 @@ class Client {
 
 		if (! in_array($response->getStatusCode(), [200, 201]))
 		{
-			$this->status = 'error';
-
 			if ($response->getStatusCode() == 404)
 			{
 				if ($response->getHeader('Content-Type') !== 'application/xml; charset=utf-8')
@@ -53,19 +51,12 @@ class Client {
 
 			$this->setResponse($response);
 
-			return $this;
-		}
-
-		$this->setResponse($response);
-
-		if (isset($this->response['error']) || (isset($this->response['succeeded']) && $this->response['succeeded'] == 'false'))
-		{
 			$this->status = 'error';
 
 			return $this;
 		}
 
-		$this->status = 'success';
+		$this->setResponse($response);
 
 		return $this;
 	}
@@ -93,6 +84,15 @@ class Client {
 		$response = json_decode(json_encode((array) $response), true);
 
 		$this->response = $this->cleanArray($response);
+
+		if (isset($this->response['error']) || (isset($this->response['succeeded']) && $this->response['succeeded'] == 'false'))
+		{
+			$this->status = 'error';
+
+			return $this;
+		}
+
+		$this->status = 'success';
 	}
 
 	/**

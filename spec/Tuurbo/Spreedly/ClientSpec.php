@@ -79,6 +79,28 @@ class ClientSpec extends ObjectBehavior {
 			->duringRequest(self::HTTP_URL, 'get');
 	}
 
+	function it_sets_status_to_success_if_transaction_succeeds($client)
+	{
+		$client->get(self::HTTP_URL, Argument::type('array'))
+			->shouldBeCalled()
+			->willReturn(new ClientStub200);
+
+		$this->request(self::HTTP_URL, 'get')
+			->success()
+			->shouldReturn(true);
+	}
+
+	function it_sets_status_to_error_if_transaction_fails($client)
+	{
+		$client->get(self::HTTP_URL, Argument::type('array'))
+			->shouldBeCalled()
+			->willReturn(new ClientStub500);
+
+		$this->request(self::HTTP_URL, 'get')
+			->fails()
+			->shouldReturn(true);
+	}
+
 	function it_throws_an_exception_if_the_config_is_invalid($client)
 	{
 		$this->beConstructedWith($client, []);
@@ -119,6 +141,25 @@ class ClientStub404 {
 	function getStatusCode()
 	{
 		return 404;
+	}
+
+	function getHeader()
+	{
+		return 'application/text; charset=utf-8';
+	}
+
+	function xml()
+	{
+		return [];
+	}
+
+}
+
+class ClientStub500 {
+
+	function getStatusCode()
+	{
+		return 500;
 	}
 
 	function getHeader()
