@@ -73,7 +73,11 @@ class Client {
 		{
 			if ($response->getHeader('Content-Type') === 'application/xml; charset=utf-8')
 			{
-				$response = $response->xml();
+				$xmlConfig = [
+					'libxml_options' => (LIBXML_NONET | LIBXML_NOCDATA),
+				];
+
+				$response = $response->xml($xmlConfig);
 			}
 			else
 			{
