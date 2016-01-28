@@ -4,7 +4,7 @@
 
 Using this API call instead of using the transparent redirect payment form can significantly increase your PCI compliance requirements. The data attribute can be any arbitrary data you’d like to attach to the payment method. Multiple tokens may be returned after this below code has been called. So be sure you retrieve the payment token and you may want to store it for later use especially if you set retained to true. After a payment method has been successfully used, it must be retained before it can be used again.
 
-```
+```php
 Spreedly::payment()->create([
 	'credit_card' => [
 		'first_name' => 'Joe',
@@ -93,7 +93,7 @@ Array
 
 It’s important to note that updating sensitive information like card number and verification value is prohibited using this API call. To change the sensitive information like the credit card number or the verification value, you’ll want to create and retain a new payment.
 
-```
+```php
 Spreedly::payment($paymentToken)->update([
 	'month' => '04',
 	'year' => '2020',
@@ -111,7 +111,7 @@ Spreedly::payment($paymentToken)->update([
 
 To see the list of retained payment methods, you can make this api call. The retained payment methods returned will be sorted by created_at and then token. It returns the oldest 20 payment methods.
 
-```
+```php
 Spreedly::payment()->all();
 
 // If you have more than 20, you can always paginate to get the remainder
@@ -123,13 +123,13 @@ Spreedly::payment()->all($paymentToken);
 
 Unless specifically instructed to do otherwise, Core purges all of the sensitive data of payment methods it has seen every few minutes. To keep the sensitive information of a payment method around for later, simply use the code below. I recommend using the ```retained => true``` param when creating a new payment method, instead of making a seperate call with the code below to store the payment method. NOTE: Additional fee's may apply for storing cards, see Spreedly site
 
-```
+```php
 Spreedly::payment($paymentToken)->retain();
 ```
 
 ## Store/Vault a Payment Method to Third Party
 
-```
+```php
 Spreedly::gateway($gatewayToken)->payment($paymentToken)->store();
 ```
 
@@ -137,7 +137,7 @@ Spreedly::gateway($gatewayToken)->payment($paymentToken)->store();
 
 You should only keep around the sensitive information of payment methods that you’re really going to use. Rather than deleting a payment method, spreedly redacts it, removing all sensitive information but leaving a place for any transactions to hang off of. You can only disable payment methods that were retained on Spreedly.
 
-```
+```php
 Spreedly::payment($paymentToken)->disable();
 ```
 
@@ -145,7 +145,7 @@ Spreedly::payment($paymentToken)->disable();
 
 Ask a gateway if a payment method is in good standing.
 
-```
+```php
 Spreedly::payment($paymentToken)->verify();
 
 // Retain the card if it has been successfully verified
@@ -156,7 +156,7 @@ Spreedly::payment($paymentToken)->verify(true);
 
 Get the details of a specific payment method.
 
-```
+```php
 Spreedly::payment($paymentToken)->get();
 ```
 
@@ -166,7 +166,7 @@ A purchase call immediately takes funds from the payment method (assuming the tr
 
 **NOTE: The ```->purchase()``` method converts the amount including cents to an integer before being sent to Spreedly, so be sure to enter amounts like so 10.98, _not_ 1098 as stated in the official Spreedly docs**
 
-```
+```php
 // Use default gateway. (Charged: $10.98)
 Spreedly::payment($paymentToken)->purchase(10.98);
 Spreedly::payment($paymentToken)->purchase(10.98, 'USD');
@@ -190,7 +190,7 @@ An authorize works just like a purchase; the difference being that it doesn’t 
 
 **NOTE: The ```->authorize()``` method converts the amount including cents to an integer before being sent to Spreedly, so be sure to enter amounts like so 10.98, _not_ 1098 as stated in the official Spreedly docs**
 
-```
+```php
 // Use default gateway
 Spreedly::payment($paymentToken)->authorize(10.98, 'USD');
 
@@ -211,7 +211,7 @@ Spreedly::payment($paymentToken)->authorize(10.98, 'USD', [
 
 The general credit action can add funds to a credit card. This is different than a credit which refunds money. Support for this capability depends on the gateway.
 
-```
+```php
 Spreedly::payment($paymentToken)->generalCredit(10.98);
 ```
 
@@ -219,7 +219,7 @@ Spreedly::payment($paymentToken)->generalCredit(10.98);
 
 View all transactions of a specific payment method. The transactions returned will be sorted by created_at and then token. It returns the oldest 20 transactions.
 
-```
+```php
 Spreedly::payment($paymentToken)->transactions();
 
 // If you have more than 20 transactions, you can always paginate to get the remainder after the token specified.
