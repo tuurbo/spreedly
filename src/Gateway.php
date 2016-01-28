@@ -57,6 +57,20 @@ class Gateway {
 	}
 
 	/**
+	 * Get a specific gateway on Spreedly.
+	 *
+	 * <code>
+	 *		Spreedly::gateway($gatewayToken)->show();
+	 * </code>
+	 *
+	 * @return \Tuurbo\Spreedly\Client
+	 */
+	public function show()
+	{
+		return $this->client->request('https://core.spreedly.com/v1/gateways/'.$this->gatewayToken.'.xml');
+	}
+
+	/**
 	 * Create a new gateway on Spreedly.
 	 *
 	 * <code>

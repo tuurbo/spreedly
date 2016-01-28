@@ -90,8 +90,9 @@ if ($resp->fails()) {
 ```php
 // Gateway calls.
 Spreedly::gateway()->setup();
-Spreedly::gateway()->create();
 Spreedly::gateway()->all();
+Spreedly::gateway()->show();
+Spreedly::gateway()->create();
 Spreedly::gateway()->disable();
 Spreedly::gateway()->update();
 Spreedly::gateway()->transactions();

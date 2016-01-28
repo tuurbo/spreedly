@@ -19,10 +19,17 @@ Spreedly::gateway()->all();
 Spreedly::gateway()->all($gatewayToken);
 ```
 
+## View a Gateway
+
+Get a specific gateway that has already been created.
+
+```php
+Spreedly::gateway()->show();
+```
+
 ## Create a Gateway
 
-After you can find out what you need to create a particular gateway using ```
-Spreedly::gateway()->setup()```. Use the following code.
+If needed, use ```Spreedly::gateway()->setup()``` to get a list of gateways and their configs.
 
 ```php
 // Example: Create a 'Test' Gateway.
