@@ -87,6 +87,27 @@ class Payment {
 	}
 
 	/**
+	 * Update a credit card’s verification value.
+	 *
+	 * @return \Tuurbo\Spreedly\Client
+	 */
+	public function recache($cvv)
+	{
+		if (! $this->paymentToken)
+			throw new Exceptions\MissingPaymentTokenException;
+
+		$params = [
+			'payment_method' => [
+				'credit_card' => [
+					'verification_value' => $cvv
+				]
+			]
+		];
+
+		return $this->client->request('https://core.spreedly.com/v1/payment_methods/'.$this->paymentToken.'/recache.xml', 'post', $params);
+	}
+
+	/**
 	 * Store/Vault a payment method to a third party, like Braintree or Quickpay.
 	 *
 	 * @return \Tuurbo\Spreedly\Client

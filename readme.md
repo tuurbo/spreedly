@@ -107,6 +107,7 @@ Spreedly::payment()->create();
 Spreedly::payment()->update();
 Spreedly::payment()->disable();
 Spreedly::payment()->retain();
+Spreedly::payment()->recache();
 Spreedly::payment()->store();
 Spreedly::payment()->get();
 Spreedly::payment()->transactions();

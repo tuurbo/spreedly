@@ -127,6 +127,14 @@ Unless specifically instructed to do otherwise, Core purges all of the sensitive
 Spreedly::payment($paymentToken)->retain();
 ```
 
+## Recache a Payment Method
+
+Update a credit card’s verification value (CVV).
+
+```php
+Spreedly::payment($paymentToken)->recache(123);
+```
+
 ## Store/Vault a Payment Method to Third Party
 
 ```php

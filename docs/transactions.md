@@ -4,7 +4,7 @@
 
 The transactions returned will be sorted by created_at and then token. It returns the oldest 20 transactions.
 
-```
+```php
 Spreedly::transaction()->all();
 
 // If you have more than 20 transactions, you can always paginate to get more like so.
@@ -15,7 +15,7 @@ Spreedly::transaction()->all($transactionToken);
 
 Get the details of a specific transaction.
 
-```
+```php
 Spreedly::transaction($transactionToken)->get();
 ```
 
@@ -23,7 +23,7 @@ Spreedly::transaction($transactionToken)->get();
 
 If you used a transaction token to Purchase, Authorization, Void, or Credit, this will list all the transactions referencing that transaction. NOTE: This call could take a while if there are a lot of referencing transactions because it has to make a seperate call for each referenced transaction.
 
-```
+```php
 Spreedly::transaction($transactionToken)->referencing();
 
 // If there are a lot of referencing transactions, you may want to limit how many transactions are returned.
@@ -38,7 +38,7 @@ Spreedly::transaction($transactionToken)->referencing(5, 5);
 
 This allows you to see the full conversation Spreedly had with the payment gateway for a given transaction.
 
-```
+```php
 Spreedly::transaction($transactionToken)->transcript();
 ```
 
@@ -46,7 +46,7 @@ Spreedly::transaction($transactionToken)->transcript();
 
 No reason to set the gateway before these methods, since the transactions gateway can't be changed.
 
-```
+```php
 // A purchase call immediately takes funds (assuming the transaction succeeds).
 Spreedly::transaction($transactionToken)->purchase('...AMOUNT...', '...CURRENCY(optional)...');
 
@@ -70,7 +70,7 @@ Spreedly::transaction($transactionToken)->purchase(10.98, 'USD', [
 
 No reason to set the gateway, since the transactions gateway can't be changed.
 
-```
+```php
 // A capture will take the funds previously that were reserved via an authorization.
 Spreedly::transaction($transactionToken)->capture(10.98);
 Spreedly::transaction($transactionToken)->capture(10.98, 'EUR');

@@ -28,10 +28,10 @@ class PaymentSpec extends ObjectBehavior {
 	function it_creates_a_payment_method($client)
 	{
 		$data = [
-			'credit_card' => array(
+			'credit_card' => [
 				'first_name' => 'Joe',
 				'last_name' => 'Jones'
-			),
+			],
 		];
 
 		$client->request('https://core.spreedly.com/v1/payment_methods.xml', 'post', ['payment_method' => $data])
@@ -62,6 +62,23 @@ class PaymentSpec extends ObjectBehavior {
 			->willReturn($client);
 
 		$this->retain()->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
+	}
+
+	function it_recaches_a_payment_methods_cvv($client)
+	{
+		$data = [
+			'payment_method' => [
+				'credit_card' => [
+					'verification_value' => 123
+				]
+			]
+		];
+
+		$client->request('https://core.spreedly.com/v1/payment_methods/'.self::PAYMENT_TOKEN.'/recache.xml', 'post', $data)
+			->shouldBeCalled()
+			->willReturn($client);
+
+		$this->recache(123)->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
 	}
 
 	function it_stores_a_payment_method($client)
