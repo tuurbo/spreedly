@@ -34,9 +34,11 @@ return [
     ...
 
     'spreedly' => [
-        'key' => '', // Environment key
-        'secret' => '', // Signing Secret
-        'gateway' => '', // Default gateway
+        'key' => '', // (required) Environment key
+        'secret' => '', // (required) Signing Secret
+        'gateway' => '', // (required) Default gateway
+        'timeout' => '', // (optional) Default 15 seconds
+        'connect_timeout' => '', // (optional) Default 10 seconds
     ]
 
 ];
@@ -46,9 +48,11 @@ return [
 
 ```php
 $config = [
-    'key' => '', // Environment key
-    'secret' => '', // Signing Secret
-    'gateway' => '', // Default gateway
+    'key' => '', // (required) Environment key
+    'secret' => '', // (required) Signing Secret
+    'gateway' => '', // (required) Default gateway
+    'timeout' => '', // (optional) Default 15 seconds
+    'connect_timeout' => '', // (optional) Default 10 seconds
 ];
 
 $spreedly = new Tuurbo\Spreedly\Spreedly($config);
