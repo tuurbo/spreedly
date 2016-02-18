@@ -143,9 +143,9 @@ class Transaction
      *		Spreedly::transaction($transactionToken)->capture();
      * </code>
      *
-     * @param string|numeric $amount
-     * @param string         $currency
-     * @param array          $data
+     * @param int|null $amount
+     * @param string   $currency
+     * @param array    $data
      *
      * @return \Tuurbo\Spreedly\Client
      */
@@ -177,8 +177,8 @@ class Transaction
      *		Spreedly::transaction($transactionToken)->credit(1.99);
      * </code>
      *
-     * @param float|null $amount
-     * @param array      $data
+     * @param int|null $amount
+     * @param array    $data
      *
      * @return mixed
      *
@@ -221,7 +221,7 @@ class Transaction
      *		Spreedly::transaction($transactionToken)->purchase(1.99, 'EUR');
      * </code>
      *
-     * @param float  $amount
+     * @param int    $amount
      * @param string $currency
      * @param array  $data
      *

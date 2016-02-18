@@ -180,9 +180,9 @@ class Payment
      *		Spreedly::payment($paymentToken)->capture();
      * </code>
      *
-     * @param string|numeric $amount
-     * @param string         $currency
-     * @param array          $data
+     * @param int    $amount
+     * @param string $currency
+     * @param array  $data
      *
      * @return \Tuurbo\Spreedly\Client
      */
@@ -258,7 +258,7 @@ class Payment
      *		Spreedly::payment($paymentToken)->authorize(1.99, 'EUR');
      * </code>
      *
-     * @param float  $amount
+     * @param int    $amount
      * @param string $currency
      * @param array  $data
      *
@@ -280,7 +280,7 @@ class Payment
      *		Spreedly::payment($paymentToken)->purchase(1.99, 'EUR');
      * </code>
      *
-     * @param float  $amount
+     * @param int    $amount
      * @param string $currency
      * @param array  $data
      *
@@ -295,7 +295,7 @@ class Payment
      * Can be used to charge or authorize.
      *
      * @param string $method
-     * @param float  $amount
+     * @param int    $amount
      * @param string $currency
      * @param array  $data
      *
