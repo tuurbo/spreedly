@@ -1,3 +1,7 @@
-<?php namespace Tuurbo\Spreedly\Exceptions;
+<?php
 
-class InvalidTransactionTokenException extends \Exception {}
+namespace Tuurbo\Spreedly\Exceptions;
+
+class InvalidTransactionTokenException extends \Exception
+{
+}

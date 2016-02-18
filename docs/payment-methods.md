@@ -121,7 +121,7 @@ Spreedly::payment()->all($paymentToken);
 
 ## Retain a Payment Method
 
-Unless specifically instructed to do otherwise, Core purges all of the sensitive data of payment methods it has seen every few minutes. To keep the sensitive information of a payment method around for later, simply use the code below. I recommend using the ```retained => true``` param when creating a new payment method, instead of making a seperate call with the code below to store the payment method. NOTE: Additional fee's may apply for storing cards, see Spreedly site
+Unless specifically instructed to do otherwise, Spreedly purges all of the sensitive data of payment methods it has seen every few minutes. To keep the sensitive information of a payment method around for later, simply use the code below. I recommend using the ```retained => true``` param when creating a new payment method, instead of making a separate call with the code below to store the payment method. NOTE: Additional fee's may apply for storing cards, see Spreedly site.
 
 ```php
 Spreedly::payment($paymentToken)->retain();
@@ -143,7 +143,7 @@ Spreedly::gateway($gatewayToken)->payment($paymentToken)->store();
 
 ## Disable a Stored Payment Method
 
-You should only keep around the sensitive information of payment methods that you’re really going to use. Rather than deleting a payment method, spreedly redacts it, removing all sensitive information but leaving a place for any transactions to hang off of. You can only disable payment methods that were retained on Spreedly.
+You should only keep around the sensitive information of payment methods that you’re really going to use. Rather than deleting a payment method, Spreedly redacts it, removing all sensitive information but leaving a place for any transactions to hang off of. You can only disable payment methods that were retained on Spreedly.
 
 ```php
 Spreedly::payment($paymentToken)->disable();
@@ -172,18 +172,18 @@ Spreedly::payment($paymentToken)->get();
 
 A purchase call immediately takes funds from the payment method (assuming the transaction succeeds). ```->purchase()``` accepts 2 paramaters. Param 1 is the amount to charge. Param 2 is the currency and is optional. After a payment method has been successfully used, it must be retained before it can be used again.
 
-**NOTE: The ```->purchase()``` method converts the amount including cents to an integer before being sent to Spreedly, so be sure to enter amounts like so 10.98, _not_ 1098 as stated in the official Spreedly docs**
+**The amount must be an integer as per required by Spreedly. E.g., 1098 for $10.98.**
 
 ```php
 // Use default gateway. (Charged: $10.98)
-Spreedly::payment($paymentToken)->purchase(10.98);
-Spreedly::payment($paymentToken)->purchase(10.98, 'USD');
+Spreedly::payment($paymentToken)->purchase(1098);
+Spreedly::payment($paymentToken)->purchase(1098, 'USD');
 
 // Set gateway. (Charged: $10.98)
-Spreedly::gateway($gatewayToken)->payment($paymentToken)->purchase(10.98, 'USD');
+Spreedly::gateway($gatewayToken)->payment($paymentToken)->purchase(1098, 'USD');
 
 // Specifying some custom data that spreedly allows
-Spreedly::payment($paymentToken)->purchase(10.98, 'USD', [
+Spreedly::payment($paymentToken)->purchase(1098, 'USD', [
   'ip' => '127.0.0.1',
   'order_id' => '12345',
   'description' => 'test description...',
@@ -196,17 +196,17 @@ Spreedly::payment($paymentToken)->purchase(10.98, 'USD', [
 
 An authorize works just like a purchase; the difference being that it doesn’t actually take the funds. ```->authorize()``` accepts 2 paramaters. Param 1 is the amount to authorize. Param 2 is the currency and is optional. NOTE: ```->authorize()``` will hold funds on some payment methods, notably debit cards.
 
-**NOTE: The ```->authorize()``` method converts the amount including cents to an integer before being sent to Spreedly, so be sure to enter amounts like so 10.98, _not_ 1098 as stated in the official Spreedly docs**
+**The amount must be an integer as per required by Spreedly. E.g., 1098 for $10.98.**
 
 ```php
 // Use default gateway
-Spreedly::payment($paymentToken)->authorize(10.98, 'USD');
+Spreedly::payment($paymentToken)->authorize(1098, 'USD');
 
 // Set gateway
-Spreedly::gateway($gatewayToken)->payment($paymentToken)->authorize(10.98, 'USD');
+Spreedly::gateway($gatewayToken)->payment($paymentToken)->authorize(1098, 'USD');
 
 // Specifying some custom data that spreedly allows
-Spreedly::payment($paymentToken)->authorize(10.98, 'USD', [
+Spreedly::payment($paymentToken)->authorize(1098, 'USD', [
   'ip' => '127.0.0.1',
   'order_id' => '12345',
   'description' => 'test description...',
@@ -219,8 +219,10 @@ Spreedly::payment($paymentToken)->authorize(10.98, 'USD', [
 
 The general credit action can add funds to a credit card. This is different than a credit which refunds money. Support for this capability depends on the gateway.
 
+**The amount must be an integer as per required by Spreedly. E.g., 1098 for $10.98.**
+
 ```php
-Spreedly::payment($paymentToken)->generalCredit(10.98);
+Spreedly::payment($paymentToken)->generalCredit(1098);
 ```
 
 ## Transactions for a Payment Method

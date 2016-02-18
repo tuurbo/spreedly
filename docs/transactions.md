@@ -46,6 +46,8 @@ Spreedly::transaction($transactionToken)->transcript();
 
 No reason to set the gateway before these methods, since the transactions gateway can't be changed.
 
+**The amount must be an integer as per required by Spreedly. E.g., 1098 for $10.98.**
+
 ```php
 // A purchase call immediately takes funds (assuming the transaction succeeds).
 Spreedly::transaction($transactionToken)->purchase('...AMOUNT...', '...CURRENCY(optional)...');
@@ -54,10 +56,10 @@ Spreedly::transaction($transactionToken)->purchase('...AMOUNT...', '...CURRENCY(
 Spreedly::transaction($transactionToken)->void();
 
 // A credit is like a void, except it reverses a charge instead of just cancelling a charge that hasn’t yet been made. You can pass in an amount to only credit a portion of the original transaction.
-Spreedly::transaction($transactionToken)->credit('...AMOUNT(optional)...');
+Spreedly::transaction($transactionToken)->credit('...AMOUNT(optional)...', '...CURRENCY(optional)...');
 
 // Example: Specifying some custom data that spreedly allows
-Spreedly::transaction($transactionToken)->purchase(10.98, 'USD', [
+Spreedly::transaction($transactionToken)->purchase(1098, 'USD', [
   'ip' => '127.0.0.1',
   'order_id' => '12345',
   'description' => 'test description...',
@@ -70,11 +72,13 @@ Spreedly::transaction($transactionToken)->purchase(10.98, 'USD', [
 
 No reason to set the gateway, since the transactions gateway can't be changed.
 
+**The amount must be an integer as per required by Spreedly. E.g., 1098 for $10.98.**
+
 ```php
 // A capture will take the funds previously that were reserved via an authorization.
-Spreedly::transaction($transactionToken)->capture(10.98);
-Spreedly::transaction($transactionToken)->capture(10.98, 'EUR');
-Spreedly::transaction($transactionToken)->capture(10.98, 'USD', [
+Spreedly::transaction($transactionToken)->capture(1098);
+Spreedly::transaction($transactionToken)->capture(1098, 'EUR');
+Spreedly::transaction($transactionToken)->capture(1098, 'USD', [
   'ip' => '127.0.0.1',
   'order_id' => '12345',
   'description' => 'test description...',

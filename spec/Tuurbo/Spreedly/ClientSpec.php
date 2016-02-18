@@ -1,175 +1,204 @@
-<?php namespace spec\Tuurbo\Spreedly;
+<?php
+
+namespace spec\Tuurbo\Spreedly;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Response as GuzzleResponse;
 
-class ClientSpec extends ObjectBehavior {
+class ClientSpec extends ObjectBehavior
+{
+    const GATEWAY_TOKEN = '...GATEWAY_TOKEN...';
+    const PAYMENT_TOKEN = '...PAYMENT_TOKEN...';
+    const BASE_URL = 'https://core.spreedly.com/';
+    const END_POINT = 'v1/fake_url';
 
-	const GATEWAY_TOKEN = '...GATEWAY_TOKEN...';
-	const PAYMENT_TOKEN = '...PAYMENT_TOKEN...';
-	const HTTP_URL = 'http://example.com';
+    public function let(Client $client)
+    {
+        $config = [
+            'key' => '12345',
+            'secret' => '67890',
+        ];
 
-	function let(Client $client)
-	{
-		$config = [
-			'key' => '12345',
-			'secret' => '67890'
-		];
+        $this->beConstructedWith($client, $config);
+    }
 
-		$this->beConstructedWith($client, $config);
-	}
+    public function letGo()
+    {
+        $this->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
+    }
 
-	function letGo()
-	{
-		$this->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
-	}
+    public function it_returns_an_array()
+    {
+        $array = [
+            'gateway' => [
+                'paypal' => [
+                    'test' => 2,
+                ],
+            ],
+        ];
 
-	function it_returns_an_array()
-	{
-		$array = [
-			'gateway' => [
-				'paypal' => [
-					'test' => 2
-				]
-			]
-		];
+        $this->setResponse($array);
 
-		$this->setResponse($array);
+        $this->response()->shouldReturn($array['gateway']);
+    }
 
-		$this->response()->shouldReturn($array);
-	}
+    public function it_returns_an_array_without_any_keys_containing_an_at_symbol_attribute()
+    {
+        $this->setResponse([
+            'gateway' => [
+                'paypal' => [
+                    'test' => 2,
+                ],
+            ],
+        ]);
 
-	function it_returns_an_array_without_any_keys_containing_an_at_symbol_attribute()
-	{
-		$this->setResponse([
-			'gateway' => [
-				'paypal' => [
-					'@attributes' => 1,
-					'test' => 2
-				]
-			]
-		]);
+        $this->response()->shouldReturn([
+                'paypal' => [
+                    'test' => 2,
+                ],
+        ]);
+    }
 
-		$this->response()->shouldReturn([
-			'gateway' => [
-				'paypal' => [
-					'test' => 2
-				]
-			]
-		]);
-	}
+    public function it_returns_an_array_of_errors($client)
+    {
+        $errors = [
+            'errors' => [
+                [
+                    'key' => 'broken',
+                    'message' => 'something went wrong',
+                ],
+            ],
+        ];
 
-	function it_return_an_instance_of_itself($client)
-	{
-		$client->get(self::HTTP_URL, Argument::type('array'))
-			->shouldBeCalled()
-			->willReturn(new ClientStub200);
+        $this->setResponse($errors);
 
-		$this->request(self::HTTP_URL, 'get')->shouldReturn($this);
-	}
+        $this->errors()
+            ->shouldReturn($errors['errors']);
+    }
 
-	function it_throws_an_exception_if_http_response_is_404($client)
-	{
-		$client->get(self::HTTP_URL, Argument::type('array'))
-			->shouldBeCalled()
-			->willReturn(new ClientStub404);
+    public function it_returns_a_string_of_errors($client)
+    {
+        $errors = [
+            'errors' => [
+                [
+                    'key' => 'broken',
+                    'message' => 'something went wrong',
+                ],
+            ],
+        ];
 
-		$this->shouldThrow('Tuurbo\Spreedly\Exceptions\NotFoundHttpException')
-			->duringRequest(self::HTTP_URL, 'get');
-	}
+        $this->setResponse($errors);
 
-	function it_sets_status_to_success_if_transaction_succeeds($client)
-	{
-		$client->get(self::HTTP_URL, Argument::type('array'))
-			->shouldBeCalled()
-			->willReturn(new ClientStub200);
+        $errors = array_map(function ($error) {
+            return $error['message'];
+        }, $errors['errors']);
 
-		$this->request(self::HTTP_URL, 'get')
-			->success()
-			->shouldReturn(true);
-	}
+        $this->errors(true)
+            ->shouldReturn(implode(', ', $errors));
+    }
 
-	function it_sets_status_to_error_if_transaction_fails($client)
-	{
-		$client->get(self::HTTP_URL, Argument::type('array'))
-			->shouldBeCalled()
-			->willReturn(new ClientStub500);
+    public function it_return_an_instance_of_itself($client)
+    {
+        $client->get(self::BASE_URL.self::END_POINT, Argument::type('array'))
+            ->shouldBeCalled()
+            ->willReturn(new ClientStub200());
 
-		$this->request(self::HTTP_URL, 'get')
-			->fails()
-			->shouldReturn(true);
-	}
+        $this->get(self::END_POINT)->shouldReturn($this);
+    }
 
-	function it_throws_an_exception_if_the_config_is_invalid($client)
-	{
-		$this->beConstructedWith($client, []);
+    public function it_throws_an_exception_if_http_response_is_404($client)
+    {
+        $client->get(self::BASE_URL.self::END_POINT, Argument::type('array'))
+            ->shouldBeCalled()
+            ->willReturn(new ClientStub404());
 
-		$this->shouldThrow('Exception')
-			->duringRequest(self::HTTP_URL, 'get');
-	}
+        $this->shouldThrow('Tuurbo\Spreedly\Exceptions\NotFoundHttpException')
+            ->duringGet(self::END_POINT);
+    }
 
-	function it_throws_an_exception_if_given_an_invalid_http_method()
-	{
-		$this->shouldThrow('Tuurbo\Spreedly\Exceptions\InvalidRequestMethodException')
-			->duringRequest(self::HTTP_URL, 'INVALID_METHOD');
-	}
+    public function it_sets_status_to_success_if_transaction_succeeds($client)
+    {
+        $client->get(self::BASE_URL.self::END_POINT, Argument::type('array'))
+            ->shouldBeCalled()
+            ->willReturn(new ClientStub200());
 
+        $this->get(self::END_POINT)
+            ->success()
+            ->shouldReturn(true);
+    }
+
+    public function it_sets_status_to_error_if_transaction_fails($client)
+    {
+        $client->get(self::BASE_URL.self::END_POINT, Argument::type('array'))
+            ->shouldBeCalled()
+            ->willReturn(new ClientStub500());
+
+        $this->get(self::END_POINT)
+            ->fails()
+            ->shouldReturn(true);
+    }
+
+    public function it_throws_an_exception_if_the_config_is_invalid($client)
+    {
+        $this->beConstructedWith($client, []);
+
+        $this->shouldThrow('Exception')
+            ->duringGet(self::END_POINT);
+    }
 }
 
-class ClientStub200 {
+class ClientStub200 extends GuzzleResponse
+{
+    public function getStatusCode()
+    {
+        return 200;
+    }
 
-	function getStatusCode()
-	{
-		return 200;
-	}
+    public function getHeader($header)
+    {
+        return ['application/json; charset=utf-8'];
+    }
 
-	function getHeader()
-	{
-		return 'application/xml; charset=utf-8';
-	}
-
-	function xml()
-	{
-		return [];
-	}
-
+    public function getBody()
+    {
+        return json_encode([]);
+    }
 }
 
-class ClientStub404 {
+class ClientStub404 extends GuzzleResponse
+{
+    public function getStatusCode()
+    {
+        return 404;
+    }
 
-	function getStatusCode()
-	{
-		return 404;
-	}
+    public function getHeader($header)
+    {
+        return ['application/text; charset=utf-8'];
+    }
 
-	function getHeader()
-	{
-		return 'application/text; charset=utf-8';
-	}
-
-	function xml()
-	{
-		return [];
-	}
-
+    public function json()
+    {
+        return json_encode([]);
+    }
 }
 
-class ClientStub500 {
+class ClientStub500 extends GuzzleResponse
+{
+    public function getStatusCode()
+    {
+        return 500;
+    }
 
-	function getStatusCode()
-	{
-		return 500;
-	}
+    public function getHeader($header)
+    {
+        return ['application/text; charset=utf-8'];
+    }
 
-	function getHeader()
-	{
-		return 'application/text; charset=utf-8';
-	}
-
-	function xml()
-	{
-		return [];
-	}
-
+    public function json()
+    {
+        return json_encode([]);
+    }
 }

@@ -1,3 +1,7 @@
-<?php namespace Tuurbo\Spreedly\Exceptions;
+<?php
 
-class InvalidConfigException extends \Exception {}
+namespace Tuurbo\Spreedly\Exceptions;
+
+class InvalidConfigException extends \Exception
+{
+}

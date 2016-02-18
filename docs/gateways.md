@@ -2,7 +2,7 @@
 
 ## List of supported Gateways
 
-When getting ready to add a gateway, the first thing you'll want to do is find out what your gateway type is and what credentials you need to set it up. You can visit [Spreedly](https://spreedlycore.com/manual/gateways) for the details if you prefer, instead of using the below code.
+When getting ready to add a gateway, the first thing you'll want to do is find out what your gateway type is and what credentials you need to set it up. You can get a list of support gateways and options from [Spreedly](https://docs.spreedly.com/reference/supported-gateways/) if you prefer.
 
 ```php
 Spreedly::gateway()->setup();

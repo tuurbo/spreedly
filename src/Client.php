@@ -1,277 +1,274 @@
-<?php namespace Tuurbo\Spreedly;
+<?php
+
+namespace Tuurbo\Spreedly;
 
 use GuzzleHttp\ClientInterface as GuzzleInterface;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 
-class Client {
+class Client
+{
+    const BASE_URL = 'https://core.spreedly.com/';
 
-	protected $response;
+    protected $client;
+    protected $config;
+    protected $response;
+    protected $status;
+    protected $key;
 
-	protected $methods = ['get', 'post', 'put', 'options'];
+    /**
+     * Set config.
+     *
+     * @param \GuzzleHttp\ClientInterface $client
+     * @param array                       $config
+     */
+    public function __construct(GuzzleInterface $client, $config)
+    {
+        $this->client = $client;
+        $this->config = $config;
+    }
 
-	/**
-	 * Set config
-	 *
-	 * @param  \GuzzleHttp\ClientInterface $client
-	 * @param  array $config
-	 * @return void
-	 */
-	public function __construct(GuzzleInterface $client, $config)
-	{
-		$this->client = $client;
-		$this->config = $config;
-	}
+    public function get($url, array $data = null)
+    {
+        return $this->request($url, 'get', $data);
+    }
 
-	/**
-	 * Create the CURL request
-	 *
-	 * @param  string  $url
-	 * @param  string  $method  optional
-	 * @param  array   $data    optional
-	 * @return object
-	 */
-	public function request($url, $method = 'get', array $data = null)
-	{
-		if (! in_array($method, $this->methods))
-		{
-			throw new Exceptions\InvalidRequestMethodException;
-		}
+    public function post($url, array $data = null)
+    {
+        return $this->request($url, 'post', $data);
+    }
 
-		$response = $this->client->{$method}($url, $this->buildData($data));
+    public function put($url, array $data = null)
+    {
+        return $this->request($url, 'put', $data);
+    }
 
-		if (! in_array($response->getStatusCode(), [200, 201]))
-		{
-			if ($response->getStatusCode() == 404)
-			{
-				if ($response->getHeader('Content-Type') !== 'application/xml; charset=utf-8')
-				{
-					throw new Exceptions\NotFoundHttpException;
-				}
-			}
+    /**
+     * Create the CURL request.
+     *
+     * @param string $url
+     * @param string $method optional
+     * @param array  $data   optional
+     *
+     * @return Tuurbo\Spreedly\Client
+     */
+    protected function request($url, $method, array $data = null)
+    {
+        $response = $this->client->{$method}(self::BASE_URL.$url, $this->buildData($data));
 
-			$this->setResponse($response);
+        if (!in_array($response->getStatusCode(), [200, 201])) {
+            if ($response->getStatusCode() == 404) {
+                $contentType = $response->getHeader('Content-Type');
+                if (array_shift($contentType) !== 'application/json; charset=utf-8') {
+                    throw new Exceptions\NotFoundHttpException();
+                }
+            }
 
-			$this->status = 'error';
+            $this->setResponse($response);
+            $this->status = 'error';
+        } else {
+            $this->setResponse($response);
+        }
 
-			return $this;
-		}
+        return $this;
+    }
 
-		$this->setResponse($response);
+    /**
+     * Set the response from Guzzle.
+     *
+     * @param mixed $response
+     *
+     * @return Tuurbo\Spreedly\Client
+     */
+    public function setResponse($response)
+    {
+        if ($response instanceof GuzzleResponse) {
+            $contentType = $response->getHeader('Content-Type');
 
-		return $this;
-	}
+            if (array_shift($contentType) === 'application/json; charset=utf-8') {
+                $response = $response->getBody();
+                $response = json_decode($response, true);
+            } else {
+                $response = ['raw' => (string) $response->getBody()];
+            }
+        }
 
-	/**
-	 * Set the response from Guzzle
-	 *
-	 * @param  mixed  $response
-	 * @return void
-	 */
-	public function setResponse($response)
-	{
-		if ($response instanceof GuzzleResponse)
-		{
-			$contentType = $response->getHeader('Content-Type');
+        $this->response = $response;
 
-			if (array_shift($contentType) === 'application/xml; charset=utf-8')
-			{
-				$response = simplexml_load_string($response->getBody(), 'SimpleXMLElement', LIBXML_NONET | LIBXML_NOCDATA);
-			}
-			else
-			{
-				$response = ['raw' => (string) $response->getBody()];
-			}
-		}
+        if ($this->response('error') ||
+            $this->response('errors') ||
+            $this->response('succeeded') === false) {
+            $this->status = 'error';
+        } else {
+            $this->status = 'success';
+        }
 
-		$response = json_decode(json_encode((array) $response), true);
+        return $this;
+    }
 
-		$this->response = $this->cleanArray($response);
+    /**
+     * Get the response from Guzzle as an array.
+     *
+     * @param string $key
+     *
+     * @return array
+     */
+    public function response($key = null)
+    {
+        $array = $this->response;
 
-		if (isset($this->response['error']) || (isset($this->response['succeeded']) && $this->response['succeeded'] == 'false'))
-		{
-			$this->status = 'error';
+        if (!$array) {
+            return;
+        }
 
-			return $this;
-		}
+        $this->key = key($array);
 
-		$this->status = 'success';
-	}
+        $array = $array[$this->key];
 
-	/**
-	 * Get the response from Guzzle as an array
-	 *
-	 * @param  string  $key
-	 * @return array
-	 */
-	public function response($key = null)
-	{
-		$array = $this->response;
+        if (is_null($key)) {
+            return $array;
+        }
 
-		if (is_null($key)) return $array;
+        if (isset($array[$key])) {
+            return $array[$key];
+        }
 
-		if (isset($this->response[$key])) return $array[$key];
+        foreach (explode('.', $key) as $segment) {
+            if (!is_array($array) || !array_key_exists($segment, $array)) {
+                return;
+            }
 
-		foreach (explode('.', $key) as $segment)
-		{
-			if ( ! is_array($array) || ! array_key_exists($segment, $array))
-			{
-				return null;
-			}
+            $array = $array[$segment];
+        }
 
-			$array = $array[$segment];
-		}
+        return $array;
+    }
 
-		return $array;
-	}
+    /**
+     * Get the transaction message.
+     *
+     * @return string
+     */
+    public function message()
+    {
+        return $this->response('message');
+    }
 
-	public function declined()
-	{
-		return $this->response('message');
-	}
+    /**
+     * Check if payment purchase has declined.
+     *
+     * @return bool
+     */
+    public function hasDeclined()
+    {
+        return $this->response('succeeded') !== null && $this->response('succeeded') == false;
+    }
 
-	/**
-	 * Check if payment purchase has declined
-	 *
-	 * @return bool
-	 */
-	public function hasDeclined()
-	{
-		return !! $this->declined();
-	}
+    /**
+     * Get the transaction token.
+     *
+     * @return string
+     */
+    public function transactionToken()
+    {
+        if ($this->key == 'payment_method') {
+            return;
+        }
 
-	/**
-	 * Get the transaction token
-	 *
-	 * @return string
-	 */
-	public function transactionToken()
-	{
-		return $this->response('token');
-	}
+        return $this->response('token');
+    }
 
-	/**
-	 * Get the payment token
-	 *
-	 * @return string
-	 */
-	public function paymentToken()
-	{
-		return $this->response('payment_method.token');
-	}
+    /**
+     * Get the payment token.
+     *
+     * @return string
+     */
+    public function paymentToken()
+    {
+        if ($this->key == 'payment_method') {
+            return $this->response('token');
+        }
 
-	/**
-	 * Get an array or string of errors
-	 *
-	 * @return array|string
-	 */
-	public function errors($string = false)
-	{
-		if (! isset($this->response['error']))
-		{
-			return null;
-		}
+        return $this->response('payment_method.token');
+    }
 
-		$errors = is_array($this->response['error']) ? $this->response['error'] : [$this->response['error']];
+    /**
+     * Get an array or string of errors.
+     *
+     * @return array|string
+     */
+    public function errors($string = false)
+    {
+        if (!isset($this->response['errors'])) {
+            return;
+        }
 
-		if ($string == true)
-		{
-			return implode(', ', $errors);
-		}
+        $errors = is_array($this->response['errors']) ? $this->response['errors'] : [$this->response['errors']];
 
-		return $errors;
-	}
+        if ($string == true) {
+            $errors = array_map(function ($error) {
+                return $error['message'];
+            }, $errors);
 
-	/**
-	 * Check if call returned errors
-	 *
-	 * @return bool
-	 */
-	public function hasErrors()
-	{
-		return isset($this->response['error']);
-	}
+            return implode(' ', $errors);
+        }
 
-	/**
-	 * Check if call was successfull
-	 *
-	 * @return bool
-	 */
-	public function success()
-	{
-		return $this->status == 'success';
-	}
+        return $errors;
+    }
 
-	/**
-	 * Check if call failed or purchase declined
-	 *
-	 * @return bool
-	 */
-	public function fails()
-	{
-		return $this->status == 'error';
-	}
+    /**
+     * Check if call returned errors.
+     *
+     * @return bool
+     */
+    public function hasErrors()
+    {
+        return isset($this->response['errors']);
+    }
 
-	protected function buildData($data)
-	{
-		$xml = $data ? $this->arrayToXml($data) : null;
+    /**
+     * Check if call was successfull.
+     *
+     * @return bool
+     */
+    public function success()
+    {
+        return $this->status == 'success';
+    }
 
-		return [
-			'auth' => [
-				$this->config['key'],
-				$this->config['secret']
-			],
-			'timeout' => isset($this->config['timeout']) ? $this->config['timeout'] : 15,
-			'connect_timeout' => isset($this->config['connect_timeout']) ? $this->config['connect_timeout'] : 10,
-			'exceptions' => false,
-			'headers' => [
-				'Content-type' => 'application/xml',
-				'Content-Length' => $xml ? strlen($xml) : 0
-			],
-			'body' => $xml
-		];
-	}
+    /**
+     * Check if call failed or purchase declined.
+     *
+     * @return bool
+     */
+    public function fails()
+    {
+        return $this->status == 'error';
+    }
 
-	protected function arrayToXml($array)
-	{
-		$xml = '';
+    /**
+     * Alias for fails method.
+     *
+     * @return bool
+     */
+    public function failed()
+    {
+        return $this->fails();
+    }
 
-		foreach($array as $element => $value)
-		{
-			if (is_array($value))
-			{
-				$xml .= "<$element>". $this->arrayToXml($value) ."</$element>";
-			}
-			else if ($value == '')
-			{
-				$xml .= "<$element />";
-			}
-			else
-			{
-				$xml .= "<$element>". htmlentities($value) ."</$element>";
-			}
-		}
-
-		return $xml;
-	}
-
-	protected function cleanArray($array)
-	{
-		return array_map(function($val){
-
-			if (is_array($val))
-			{
-				if (key($val) == '@attributes')
-					unset($val['@attributes']);
-
-				if (empty($val))
-					return null;
-
-				return $this->cleanArray($val);
-			}
-
-			return $val;
-
-		}, $array);
-	}
-
+    protected function buildData($data)
+    {
+        return [
+            'auth' => [
+                $this->config['key'],
+                $this->config['secret'],
+            ],
+            'timeout' => isset($this->config['timeout']) ? $this->config['timeout'] : 15,
+            'connect_timeout' => isset($this->config['connect_timeout']) ? $this->config['connect_timeout'] : 10,
+            'exceptions' => false,
+            'headers' => [
+                'Content-type' => 'application/json',
+            ],
+            'body' => $data ? json_encode($data) : null,
+        ];
+    }
 }

@@ -1,10 +1,11 @@
-<?php namespace Tuurbo\Spreedly\Exceptions;
+<?php
 
-class MissingTransactionTokenException extends \Exception {
+namespace Tuurbo\Spreedly\Exceptions;
 
-	public function __construct($message = 'Transaction token is required', $code = 0)
-	{
-		parent::__construct($message, $code);
-	}
-
+class MissingTransactionTokenException extends \Exception
+{
+    public function __construct($message = 'Transaction token is required', $code = 0)
+    {
+        parent::__construct($message, $code);
+    }
 }

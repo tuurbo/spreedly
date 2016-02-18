@@ -1,3 +1,7 @@
-<?php namespace Tuurbo\Spreedly\Exceptions;
+<?php
 
-class NotFoundHttpException extends \Exception {}
+namespace Tuurbo\Spreedly\Exceptions;
+
+class NotFoundHttpException extends \Exception
+{
+}

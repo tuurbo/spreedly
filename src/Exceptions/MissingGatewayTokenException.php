@@ -1,10 +1,11 @@
-<?php namespace Tuurbo\Spreedly\Exceptions;
+<?php
 
-class MissingGatewayTokenException extends \Exception {
+namespace Tuurbo\Spreedly\Exceptions;
 
-	public function __construct($message = 'Gateway token is required', $code = 0)
-	{
-		parent::__construct($message, $code);
-	}
-
+class MissingGatewayTokenException extends \Exception
+{
+    public function __construct($message = 'Gateway token is required', $code = 0)
+    {
+        parent::__construct($message, $code);
+    }
 }

@@ -1,12 +1,12 @@
+**[changelog](#changelog) !! As of the 2.0 release the amount must be an integer as required by Spreedly. E.g., 1098 for $10.98 !!**
+
 # Getting Started
 
 ## Setup/Install
 
 Install through Composer.
-```json
-"require": {
-    "tuurbo/spreedly": "~1.7.0"
-}
+```
+composer require tuurbo/spreedly
 ```
 
 #### Laravel 4 or 5 Setup
@@ -25,7 +25,7 @@ Next, update app/config/app.php to include a reference to this package's service
 ]
 ```
 
-[Login](https://spreedly.com) to your spreedly account to retrieve your api credentials. You can set your default gateway once you've created your first gateway.
+[Login](https://spreedly.com) to your Spreedly account to retrieve your api credentials. You can set your default gateway once you've created your first gateway.
 
 Add to app/config/services.php config file.
 ```php
@@ -53,24 +53,28 @@ $config = [
 
 $spreedly = new Tuurbo\Spreedly\Spreedly($config);
 
-$resp = $spreedly->payment($paymentToken)->purchase(4.99);
+// The amount must be an integer as per required by Spreedly. E.g., 1098 for $10.98.
+$resp = $spreedly->payment($paymentToken)->purchase(1098);
 ```
 
 ## Example response handling
 
 ```php
-// If the call to spreedly is successfull
+// If the call to Spreedly is successful
 if ($resp->success()) {
     return $resp->response();
+    // $resp->transactionToken();
+    // $resp->paymentToken();
+    // $resp->message();
 }
 
-// If the call to spreedly fails or payment declines
+// If the call to Spreedly fails or payment declines
 if ($resp->fails()) {
 
     // returns array
     return $resp->errors();
 
-    // returns list of errors seperated by periods
+    // returns list of errors as a string
     return $resp->errors(true);
 }
 ```
@@ -126,3 +130,11 @@ Spreedly::transaction()->void();
 Spreedly::transaction()->credit();
 Spreedly::transaction()->capture();
 ```
+
+## Changelog
+
+### 2.0
+- amount is no longer converted to cents.
+    - the amount must be an integer as required by Spreedly. E.g., 1098 for $10.98
+- switched from Spreedly xml api to json api.
+- renamed ```->declined()``` method to ```->message()```.

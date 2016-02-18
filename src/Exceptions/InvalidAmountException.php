@@ -1,3 +1,7 @@
-<?php namespace Tuurbo\Spreedly\Exceptions;
+<?php
 
-class InvalidAmountException extends \Exception {}
+namespace Tuurbo\Spreedly\Exceptions;
+
+class InvalidAmountException extends \Exception
+{
+}

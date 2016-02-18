@@ -1,10 +1,11 @@
-<?php namespace Tuurbo\Spreedly\Exceptions;
+<?php
 
-class MissingPaymentTokenException extends \Exception {
+namespace Tuurbo\Spreedly\Exceptions;
 
-	public function __construct($message = 'Payment token is required', $code = 0)
-	{
-		parent::__construct($message, $code);
-	}
-
+class MissingPaymentTokenException extends \Exception
+{
+    public function __construct($message = 'Payment token is required', $code = 0)
+    {
+        parent::__construct($message, $code);
+    }
 }
