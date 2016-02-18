@@ -55,9 +55,9 @@ class ClientSpec extends ObjectBehavior
         ]);
 
         $this->response()->shouldReturn([
-                'paypal' => [
-                    'test' => 2,
-                ],
+            'paypal' => [
+                'test' => 2,
+            ],
         ]);
     }
 

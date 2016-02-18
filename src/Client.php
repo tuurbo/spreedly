@@ -4,10 +4,13 @@ namespace Tuurbo\Spreedly;
 
 use GuzzleHttp\ClientInterface as GuzzleInterface;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
+use GuzzleHttp\Exception\ConnectException as GuzzleConnectException;
 
 class Client
 {
     const BASE_URL = 'https://core.spreedly.com/';
+    const TIMEOUT = 64;
+    const CONNECT_TIMEOUT = 10;
 
     protected $client;
     protected $config;
@@ -53,20 +56,28 @@ class Client
      */
     protected function request($url, $method, array $data = null)
     {
-        $response = $this->client->{$method}(self::BASE_URL.$url, $this->buildData($data));
+        try {
+            $response = $this->client->{$method}(self::BASE_URL.$url, $this->buildData($data));
 
-        if (!in_array($response->getStatusCode(), [200, 201])) {
-            if ($response->getStatusCode() == 404) {
+            if (!in_array($response->getStatusCode(), [200, 201])) {
                 $contentType = $response->getHeader('Content-Type');
-                if (array_shift($contentType) !== 'application/json; charset=utf-8') {
+                $notJson = array_shift($contentType) !== 'application/json; charset=utf-8';
+
+                if ($response->getStatusCode() == 404 && $notJson) {
                     throw new Exceptions\NotFoundHttpException();
                 }
-            }
 
-            $this->setResponse($response);
-            $this->status = 'error';
-        } else {
-            $this->setResponse($response);
+                if ($response->getStatusCode() == 408) {
+                    throw new Exceptions\TimeoutException();
+                }
+
+                $this->setResponse($response);
+                $this->status = 'error';
+            } else {
+                $this->setResponse($response);
+            }
+        } catch (GuzzleConnectException $e) {
+            throw new Exceptions\TimeoutException();
         }
 
         return $this;
@@ -262,8 +273,8 @@ class Client
                 $this->config['key'],
                 $this->config['secret'],
             ],
-            'timeout' => isset($this->config['timeout']) ? $this->config['timeout'] : 15,
-            'connect_timeout' => isset($this->config['connect_timeout']) ? $this->config['connect_timeout'] : 10,
+            'timeout' => isset($this->config['timeout']) ? $this->config['timeout'] : self::TIMEOUT,
+            'connect_timeout' => isset($this->config['connect_timeout']) ? $this->config['connect_timeout'] : self::CONNECT_TIMEOUT,
             'exceptions' => false,
             'headers' => [
                 'Content-type' => 'application/json',

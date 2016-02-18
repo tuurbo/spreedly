@@ -50,6 +50,20 @@ class Spreedly
     }
 
     /**
+     * Set the timeout in seconds.
+     *
+     * @param int $seconds
+     *
+     * @return $this
+     */
+    public function timeout($seconds)
+    {
+        $this->config['timeout'] = $seconds;
+
+        return $this;
+    }
+
+    /**
      * Set config.
      *
      * @param array $config

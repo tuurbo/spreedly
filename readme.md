@@ -37,7 +37,7 @@ return [
         'key' => '', // (required) Environment key
         'secret' => '', // (required) Signing Secret
         'gateway' => '', // (required) Default gateway
-        'timeout' => '', // (optional) Default 15 seconds
+        'timeout' => '', // (optional) Default 64 seconds (recommended by Spreedly)
         'connect_timeout' => '', // (optional) Default 10 seconds
     ]
 
@@ -51,7 +51,7 @@ $config = [
     'key' => '', // (required) Environment key
     'secret' => '', // (required) Signing Secret
     'gateway' => '', // (required) Default gateway
-    'timeout' => '', // (optional) Default 15 seconds
+    'timeout' => '', // (optional) Default 64 seconds (recommended by Spreedly)
     'connect_timeout' => '', // (optional) Default 10 seconds
 ];
 
@@ -136,6 +136,11 @@ Spreedly::transaction()->capture();
 ```
 
 ## Changelog
+
+### 2.1
+- changed default timeout from 15 seconds to 64 seconds as recommended by Spreedly.
+- added timeout method to change timeout per api call. E.g., ```Spreedly::timeout(25)->payment()->purchase()```.
+- added new ```Tuurbo\Spreedly\Exceptions\TimeoutException``` for catching timeouts.
 
 ### 2.0
 - amount is no longer converted to cents.
