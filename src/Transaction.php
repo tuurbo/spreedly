@@ -66,7 +66,7 @@ class Transaction
         $response = $this->get();
 
         if ($response->success()) {
-            if ($urls = $response->response('transaction.api_urls.0.referencing_transaction')) {
+            if ($urls = $response->response('api_urls.0.referencing_transaction')) {
                 if ($reverse) {
                     $urls = array_reverse($urls);
                 }
@@ -79,10 +79,12 @@ class Transaction
                     }
 
                     foreach ($urls as $url) {
-                        $transactions[] = $this->client->get(str_replace($this->client::BASE_URL, '', $url))->response();
+                        $transactions[] = $this->client->get(str_replace(Client::BASE_URL, '', $url))->response();
                     }
 
-                    $this->client->setResponse($transactions);
+                    $this->client->setResponse([
+                        'transactions' => $transactions
+                    ]);
 
                     return $this->client;
                 } elseif ($url = $urls) {
