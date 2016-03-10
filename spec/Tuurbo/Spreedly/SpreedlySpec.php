@@ -40,6 +40,12 @@ class SpreedlySpec extends ObjectBehavior
             ->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Transaction');
     }
 
+    public function it_returns_a_receiver_instance()
+    {
+        $this->receiver()
+            ->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Receiver');
+    }
+
     public function it_throws_an_exception_if_config_is_invalid()
     {
         $config = [

@@ -2,8 +2,6 @@
 
 namespace Tuurbo\Spreedly;
 
-use GuzzleHttp\Client;
-
 class Receiver {
 
     protected $config;
