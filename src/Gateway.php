@@ -204,6 +204,35 @@ class Gateway
     }
 
     /**
+     * Verify a gateway on Spreedly.
+     *
+     * <code>
+     *      Spreedly::gateway($gatewayToken)->verify([
+     *          'payment_method_token' => '3EkAnf1vawsllJm40UJfYTyh1RT',
+     *          'retain_on_success' => false
+     *      ]);
+     * </code>
+     * 
+     * @param array  $data         required
+     *
+     * @link https://docs.spreedly.com/reference/api/v1/#verify
+     *
+     * @return \Tuurbo\Spreedly\Client
+     */
+    public function verify(array $data)
+    {
+        if (!$this->gatewayToken) {
+            throw new Exceptions\MissingGatewayTokenException();
+        }
+
+        $params = [
+            'transaction' => $data,
+        ];
+
+        return $this->client->post('v1/gateways/'.$this->gatewayToken.'/verify.json', $params);
+    }
+
+    /**
      * Retrieve the gateway token.
      *
      * @return string
