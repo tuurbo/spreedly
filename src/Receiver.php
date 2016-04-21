@@ -90,7 +90,7 @@ class Receiver {
         $params = [];
         if(count($credentials)) {
             foreach($credentials as $k => $v) {
-                $params['receiver']['credentials']['credential'][] = [
+                $params['receiver']['credentials'][] = [
                     'name' => $k,
                     'value' => $v
                 ];
