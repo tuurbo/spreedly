@@ -92,7 +92,7 @@ class Spreedly
      */
     public function mergeConfig(array $config)
     {
-        $this->config = array_merge($this->config, $config);
+        $this->config = array_merge($this->config ?: [], $config);
 
         $this->validateConfig();
 
