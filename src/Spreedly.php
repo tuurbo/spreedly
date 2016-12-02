@@ -80,6 +80,26 @@ class Spreedly
     }
 
     /**
+     * Merge config.
+     *
+     * Given an array of configs, they will be merged into the existing config
+     * instead of replacing them completely
+     * The supplied configs are given priority.
+     * 
+     * @param array $config
+     *
+     * @return $this
+     */
+    public function mergeConfig(array $config)
+    {
+        $this->config = array_merge($this->config ?: [], $config);
+
+        $this->validateConfig();
+
+        return $this;
+    }
+
+    /**
      * Check config for required params.
      */
     protected function validateConfig()
