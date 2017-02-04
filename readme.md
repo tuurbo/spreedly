@@ -137,6 +137,9 @@ Spreedly::transaction()->capture();
 
 ## Changelog
 
+### 2.3
+- added support for laravel 5.4
+
 ### 2.2
 - added ability to merge configs.
 
