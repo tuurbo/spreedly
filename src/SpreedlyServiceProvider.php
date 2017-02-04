@@ -15,13 +15,13 @@ class SpreedlyServiceProvider extends ServiceProvider
 
     /**
      * Register the service provider.
+     *
+     * @return void
      */
     public function register()
     {
-        $this->app['spreedly'] = $this->app->share(function ($app) {
-            $config = $app['config']->get('services.spreedly');
-
-            return new Spreedly($config);
+        $this->app->singleton('spreedly', function ($app) {
+            return new Spreedly($app['config']->get('services.spreedly'));
         });
     }
 
