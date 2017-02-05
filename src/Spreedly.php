@@ -50,6 +50,18 @@ class Spreedly
     }
 
     /**
+     * Create a Receiver instance.
+     *
+     * @param string $paymentToken optional
+     *
+     * @return \Tuurbo\Spreedly\Receiver
+     */
+    public function receiver($paymentToken = null)
+    {
+        return new Receiver($this->client(), $this->config, $paymentToken, $this->gateway()->getToken());
+    }
+
+    /**
      * Set the timeout in seconds.
      *
      * @param int $seconds
