@@ -137,6 +137,12 @@ Spreedly::transaction()->capture();
 
 ## Changelog
 
+### 2.3
+- added support for laravel 5.4
+
+### 2.2
+- added ability to merge configs.
+
 ### 2.1
 - changed default timeout from 15 seconds to 64 seconds as recommended by Spreedly.
 - added timeout method to change timeout per api call. E.g., ```Spreedly::timeout(25)->payment()->purchase()```.
