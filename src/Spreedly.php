@@ -118,7 +118,7 @@ class Spreedly
      *
      * @return \GuzzleHttp\Client
      */
-    protected function client()
+    public function client()
     {
         return new Client(new Guzzle(), $this->config);
     }
