@@ -114,9 +114,7 @@ class TransactionSpec extends ObjectBehavior
     public function it_captures_an_authorized_amount($client)
     {
         $data = [
-            'transaction' => [
-                'currency_code' => 'USD',
-            ],
+            'transaction' => [],
         ];
 
         $client->post('v1/transactions/'.self::TRANSACTION_TOKEN.'/capture.json', $data)
@@ -133,7 +131,6 @@ class TransactionSpec extends ObjectBehavior
         $data = [
             'transaction' => [
                 'amount' => $amount,
-                'currency_code' => 'USD',
             ],
         ];
 
@@ -142,6 +139,25 @@ class TransactionSpec extends ObjectBehavior
             ->willReturn($client);
 
         $this->capture($amount)->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
+    }
+
+    public function it_captures_a_specific_authorized_amount_and_currency($client)
+    {
+        $amount = 9.99;
+        $currencyCode = 'USD';
+
+        $data = [
+            'transaction' => [
+                'amount' => $amount,
+                'currency_code' => $currencyCode,
+            ],
+        ];
+
+        $client->post('v1/transactions/'.self::TRANSACTION_TOKEN.'/capture.json', $data)
+            ->shouldBeCalled()
+            ->willReturn($client);
+
+        $this->capture($amount, $currencyCode)->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
     }
 
     public function it_completes_a_3ds2_transaction($client)

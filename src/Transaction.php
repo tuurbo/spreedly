@@ -151,13 +151,15 @@ class Transaction
      *
      * @return \Tuurbo\Spreedly\Client
      */
-    public function capture($amount = null, $currency = 'USD', array $data = [])
+    public function capture($amount = null, $currency = null, array $data = [])
     {
         $params = [
-            'transaction' => [
-                'currency_code' => $currency,
-            ],
+            'transaction' => [],
         ];
+
+        if ($currency !== null) {
+            $params['transaction']['currency_code'] = $currency;
+        }
 
         if ($amount > 0) {
             $params['transaction']['amount'] = $amount;
