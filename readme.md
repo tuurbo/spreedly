@@ -133,6 +133,7 @@ Spreedly::transaction()->purchase();
 Spreedly::transaction()->void();
 Spreedly::transaction()->credit();
 Spreedly::transaction()->capture();
+Spreedly::transaction()->complete();
 ```
 
 ## Changelog

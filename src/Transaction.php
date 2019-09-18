@@ -279,6 +279,29 @@ class Transaction
     }
 
     /**
+     * Can be used to Completes a 3DS 2 transaction in the device fingerprint stage
+     * See docs for more information.
+     *
+     * <code>
+     *		// Completes a 3DS 2 transaction in the device fingerprint stage.
+     *		Spreedly::transaction($transactionToken)->complete();
+     * </code>
+     *
+     *
+     * @return mixed
+     *
+     * @throws Exceptions\MissingTransactionTokenException
+     */
+    public function complete()
+    {
+        if (!$this->transactionToken) {
+            throw new Exceptions\MissingTransactionTokenException();
+        }
+
+        return $this->client->post('v1/transactions/'.$this->transactionToken.'/complete.json');
+    }
+
+    /**
      * @param string $method
      * @param array  $parameters
      *

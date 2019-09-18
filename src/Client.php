@@ -210,7 +210,7 @@ class Client
     public function errors($string = false)
     {
         if (!isset($this->response['errors'])) {
-            return;
+            return $string ? '' : [];
         }
 
         $errors = is_array($this->response['errors']) ? $this->response['errors'] : [$this->response['errors']];
