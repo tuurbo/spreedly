@@ -138,6 +138,9 @@ Spreedly::transaction()->complete();
 
 ## Changelog
 
+### 2.4+
+See releases page https://github.com/tuurbo/spreedly/releases
+
 ### 2.3
 - added support for laravel 5.4
 
