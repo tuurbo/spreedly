@@ -1,10 +1,11 @@
-**[changelog](#changelog) !! As of the 2.0 release the amount must be an integer as required by Spreedly. E.g., 1098 for $10.98 !!**
+**[changelog](#changelog) !! As of the 2.0 release the amount must be an integer as required by Spreedly. E.g., 1098 for \$10.98 !!**
 
 # Getting Started
 
 ## Setup/Install
 
 Install through Composer.
+
 ```
 composer require tuurbo/spreedly
 ```
@@ -28,6 +29,7 @@ Next, update app/config/app.php to include a reference to this package's service
 [Login](https://spreedly.com) to your Spreedly account to retrieve your api credentials. You can set your default gateway once you've created your first gateway.
 
 Add to app/config/services.php config file.
+
 ```php
 return [
 
@@ -136,24 +138,41 @@ Spreedly::transaction()->capture();
 Spreedly::transaction()->complete();
 ```
 
+## Development
+
+Clone the repo and run `npm install`. This will `composer install`.
+
+**Testing**
+
+Tests are in the spec directory. They are written with [phpspec](https://www.phpspec.net/en/stable/).
+
+To run your tests, simply do `npm test`. If you don't want to use npm, that's fine, simply run `vendor/bin/phpspec run`
+
+Please ensure you have added proper test coverage for each Pull Request.
+
 ## Changelog
 
 ### 2.4+
+
 See releases page https://github.com/tuurbo/spreedly/releases
 
 ### 2.3
+
 - added support for laravel 5.4
 
 ### 2.2
+
 - added ability to merge configs.
 
 ### 2.1
+
 - changed default timeout from 15 seconds to 64 seconds as recommended by Spreedly.
-- added timeout method to change timeout per api call. E.g., ```Spreedly::timeout(25)->payment()->purchase()```.
-- added new ```Tuurbo\Spreedly\Exceptions\TimeoutException``` for catching timeouts.
+- added timeout method to change timeout per api call. E.g., `Spreedly::timeout(25)->payment()->purchase()`.
+- added new `Tuurbo\Spreedly\Exceptions\TimeoutException` for catching timeouts.
 
 ### 2.0
+
 - amount is no longer converted to cents.
-    - the amount must be an integer as required by Spreedly. E.g., 1098 for $10.98
+  - the amount must be an integer as required by Spreedly. E.g., 1098 for \$10.98
 - switched from Spreedly xml api to json api.
-- renamed ```->declined()``` method to ```->message()```.
+- renamed `->declined()` method to `->message()`.

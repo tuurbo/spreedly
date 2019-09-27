@@ -1,0 +1,22 @@
+{
+  "name": "spreedly",
+  "description": "A simple php sdk for Spreedly.com's API.",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "vendor/bin/phpspec run",
+    "install": "composer install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tuurbo/spreedly.git"
+  },
+  "keywords": [],
+  "author": "https://github.com/tuurbo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tuurbo/spreedly/issues"
+  },
+  "homepage": "https://github.com/tuurbo/spreedly#readme"
+}

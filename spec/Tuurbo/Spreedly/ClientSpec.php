@@ -147,6 +147,29 @@ class ClientSpec extends ObjectBehavior
         $this->shouldThrow('Exception')
             ->duringGet(self::END_POINT);
     }
+
+    public function it_should_allow_overriding_the_base_url($client)
+    {
+        // for this test, reconstruct the client with the new base url
+        $overrideBaseUrl = 'https://otherdomain.com/';
+
+        $config = [
+            'key' => '12345',
+            'secret' => '67890',
+            'baseUrl' => $overrideBaseUrl
+        ];
+
+        $this->beConstructedWith($client, $config);
+
+        // check that client really did use the overriden base url
+        $client->post($overrideBaseUrl.self::END_POINT, Argument::type('array'))
+            ->shouldBeCalled()
+            ->willReturn(new ClientStub200());
+
+        $this->post(self::END_POINT)
+            ->success()
+            ->shouldReturn(true);
+    }
 }
 
 class ClientStub200 extends GuzzleResponse

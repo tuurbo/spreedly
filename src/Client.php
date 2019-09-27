@@ -26,6 +26,11 @@ class Client
      */
     public function __construct(GuzzleInterface $client, $config)
     {
+        // allow overriding BASE_URL
+        if (!isset($config['baseUrl'])) {
+            $config['baseUrl'] = self::BASE_URL;
+        }
+
         $this->client = $client;
         $this->config = $config;
     }
@@ -57,7 +62,9 @@ class Client
     protected function request($url, $method, array $data = null)
     {
         try {
-            $response = $this->client->{$method}(self::BASE_URL.$url, $this->buildData($data));
+            $baseUrl = $this->config['baseUrl'];
+
+            $response = $this->client->{$method}($baseUrl.$url, $this->buildData($data));
 
             if (!in_array($response->getStatusCode(), [200, 201])) {
                 $contentType = $response->getHeader('Content-Type');
