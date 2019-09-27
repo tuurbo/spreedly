@@ -1,8 +1,6 @@
 {
   "name": "spreedly",
-  "version": "1.0.0",
-  "description": "**[changelog](#changelog) !! As of the 2.0 release the amount must be an integer as required by Spreedly. E.g., 1098 for $10.98 !!**",
-  "main": "index.js",
+  "description": "A simple php sdk for Spreedly.com's API.",
   "directories": {
     "doc": "docs"
   },
@@ -12,13 +10,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fattmerchantorg/spreedly.git"
+    "url": "git+https://github.com/tuurbo/spreedly.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "https://github.com/tuurbo",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/fattmerchantorg/spreedly/issues"
+    "url": "https://github.com/tuurbo/spreedly/issues"
   },
-  "homepage": "https://github.com/fattmerchantorg/spreedly#readme"
+  "homepage": "https://github.com/tuurbo/spreedly#readme"
 }

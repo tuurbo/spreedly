@@ -27,8 +27,7 @@ class Client
     public function __construct(GuzzleInterface $client, $config)
     {
         // allow overriding BASE_URL
-        if (!isset($config['baseUrl']))
-        {
+        if (!isset($config['baseUrl'])) {
             $config['baseUrl'] = self::BASE_URL;
         }
 
