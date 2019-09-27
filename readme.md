@@ -152,9 +152,9 @@ Please ensure you have added proper test coverage for each Pull Request.
 
 ## Changelog
 
-### 2.3.1
+### 2.4+
 
-- added support for overriding the Spreedly base url
+See releases page https://github.com/tuurbo/spreedly/releases
 
 ### 2.3
 
