@@ -202,7 +202,7 @@ class Payment
      */
     public function verify($retain = false, array $data = [])
     {
-        if (!$this->paymentToken) {
+        if (!$this->paymentToken && !isset($data['credit_card']['number'])) {
             throw new Exceptions\MissingPaymentTokenException();
         }
 
