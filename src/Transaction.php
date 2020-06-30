@@ -11,7 +11,7 @@ class Transaction
     /**
      * Create a Guzzle instance and set token.
      *
-     * @param \GuzzleHttp\Client $client
+     * @param \Tuurbo\Spreedly\Client $client
      * @param array              $config
      * @param string             $transactionToken optional
      */

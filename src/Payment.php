@@ -12,7 +12,7 @@ class Payment
     /**
      * Create a Guzzle instance and set tokens.
      *
-     * @param \GuzzleHttp\Client $client
+     * @param \Tuurbo\Spreedly\Client $client
      * @param array              $config
      * @param string             $paymentToken optional
      * @param string             $gatewayToken optional
@@ -177,7 +177,7 @@ class Payment
      * Create a general credit.
      *
      * <code>
-     *		Spreedly::payment($paymentToken)->capture();
+     *		Spreedly::payment($paymentToken)->generalCredit();
      * </code>
      *
      * @param int    $amount

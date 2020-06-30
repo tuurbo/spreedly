@@ -85,7 +85,7 @@ class Spreedly
      * Given an array of configs, they will be merged into the existing config
      * instead of replacing them completely
      * The supplied configs are given priority.
-     * 
+     *
      * @param array $config
      *
      * @return $this
@@ -116,7 +116,7 @@ class Spreedly
     /**
      * Create Guzzle instance.
      *
-     * @return \GuzzleHttp\Client
+     * @return \Tuurbo\Spreedly\Client
      */
     public function client()
     {
