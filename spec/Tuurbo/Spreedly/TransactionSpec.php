@@ -162,11 +162,13 @@ class TransactionSpec extends ObjectBehavior
 
     public function it_completes_a_3ds2_transaction($client)
     {
-        $client->post('v1/transactions/'.self::TRANSACTION_TOKEN.'/complete.json')
+        $data = [];
+
+        $client->post('v1/transactions/'.self::TRANSACTION_TOKEN.'/complete.json', $data)
             ->shouldBeCalled()
             ->willReturn($client);
 
-        $this->complete()->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
+        $this->complete($data)->shouldReturnAnInstanceOf('Tuurbo\Spreedly\Client');
     }
 
     public function it_throws_invalid_method_exception()
